@@ -1,0 +1,8 @@
+{
+	"files": [],
+	"references": [
+		{ "path": "packages/merge/tsconfig.json" },
+		{ "path": "packages/merge/tsconfig.cjs.json" },
+		{ "path": "packages/merge/tsconfig.test.json" }
+	]
+}

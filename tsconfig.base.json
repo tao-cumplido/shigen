@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"useUnknownInCatchVariables": true,
+		"noImplicitOverride": true,
+		"moduleResolution": "node16",
+		"esModuleInterop": true,
+		"module": "esnext",
+		"isolatedModules": true,
+		"target": "es2022",
+		"lib": ["esnext"],
+		"sourceMap": true,
+		"declarationMap": true,
+		"importHelpers": true,
+		"composite": true,
+		"baseUrl": "." // https://github.com/microsoft/TypeScript/issues/42873#issuecomment-906308997
+	},
+	"exclude": ["node_modules"]
+}

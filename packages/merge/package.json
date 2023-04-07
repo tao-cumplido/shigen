@@ -1,0 +1,36 @@
+{
+	"name": "@shigen/merge",
+	"version": "0.1.0",
+	"description": "Merge and deep merge utility for nested data structures",
+	"keywords": [
+		"merge",
+		"deep",
+		"deepmerge",
+		"javascript",
+		"typescript",
+		"esm"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/merge",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/esm/index.d.ts",
+				"default": "./dist/esm/index.js"
+			},
+			"require": {
+				"types": "./dist/cjs/index.d.cts",
+				"default": "./dist/cjs/index.cjs"
+			}
+		}
+	},
+	"types": "./dist/cjs/index.d.cts",
+	"main": "./dist/cjs/index.cjs",
+	"scripts": {
+		"build": "tsc",
+		"test": "ava"
+	}
+}
