@@ -31,6 +31,6 @@
 	"main": "./dist/cjs/index.cjs",
 	"scripts": {
 		"build": "tsc",
-		"test": "ava"
+		"test": "tsx --test src/**/*.test.ts"
 	}
 }

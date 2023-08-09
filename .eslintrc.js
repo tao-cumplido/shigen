@@ -304,9 +304,10 @@ module.exports = {
 			},
 		},
 		{
-			files: '*.spec.ts',
+			files: '*.test.ts',
 			rules: {
 				'@typescript-eslint/naming-convention': 'off',
+				'@typescript-eslint/no-floating-promises': 'off',
 			},
 		},
 	],

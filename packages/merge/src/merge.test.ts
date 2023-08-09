@@ -1,16 +1,18 @@
-import test from 'ava';
+import assert from 'node:assert';
+
+import test from 'node:test';
 
 import { deepMerge, merge } from './merge.js';
 
-test('merge arrays', ({ deepEqual }) => {
+test('merge arrays', () => {
 	const target = [1, 2, 3] as const;
 	const source = [0, 0] as const;
 	const result = merge(target, source);
 
-	deepEqual(result, [0, 0, 3]);
+	assert.deepEqual(result, [0, 0, 3]);
 });
 
-test('merge objects', ({ deepEqual }) => {
+test('merge objects', () => {
 	const target = {
 		a: 0,
 		b: 0,
@@ -23,36 +25,36 @@ test('merge objects', ({ deepEqual }) => {
 
 	const result = merge(target, source);
 
-	deepEqual(result, {
+	assert.deepEqual(result, {
 		a: 1,
 		b: 0,
 		c: 1,
 	});
 });
 
-test('merge source array', ({ deepEqual }) => {
+test('merge source array', () => {
 	const target = { a: 0 } as const;
 	const source = [0] as const;
 	const result = merge(target, source);
 
-	deepEqual(result, {
+	assert.deepEqual(result, {
 		0: 0,
 		a: 0,
 	});
 });
 
-test('merge target array', ({ deepEqual }) => {
+test('merge target array', () => {
 	const target = [0] as const;
 	const source = { a: 0 } as const;
 	const result = merge(target, source);
 
-	deepEqual(result, {
+	assert.deepEqual(result, {
 		0: 0,
 		a: 0,
 	});
 });
 
-test('deepmerge', ({ deepEqual }) => {
+test('deepmerge', () => {
 	const target = {
 		a: 0,
 		b: [{ a: 0 }, 0, 1],
@@ -73,7 +75,7 @@ test('deepmerge', ({ deepEqual }) => {
 
 	const result = deepMerge(target, source);
 
-	deepEqual(result, {
+	assert.deepEqual(result, {
 		a: 1,
 		b: [{ a: 0, b: 0 }, 2, 1],
 		c: {
