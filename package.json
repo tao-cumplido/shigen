@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "tsc --build",
 		"postbuild": "node postbuild.mjs",
-		"test": "npm run build && npm run --workspaces --if-present test"
+		"test": "npm run --workspaces --if-present test"
 	},
 	"devDependencies": {
 		"@types/node": "20.4.8",
