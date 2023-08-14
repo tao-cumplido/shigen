@@ -29,7 +29,38 @@
 	"types": "./dist/cjs/index.d.ts",
 	"main": "./dist/cjs/index.js",
 	"scripts": {
-		"build": "tsc",
+		"build": "wireit",
 		"test": "tsx --test src/**/*.test.ts"
+	},
+	"wireit": {
+		"build:cjs": {
+			"command": "tsc --build tsconfig.cjs.json",
+			"output": [
+				"dist/cjs/**",
+				"dist/*.cjs.tsbuildinfo"
+			]
+		},
+		"build:esm": {
+			"command": "tsc --build tsconfig.esm.json",
+			"output": [
+				"dist/esm/**",
+				"dist/*.esm.tsbuildinfo"
+			]
+		},
+		"build": {
+			"dependencies": [
+				"build:cjs",
+				"build:esm"
+			],
+			"clean": "if-file-deleted",
+			"files": [
+				"src/**/*.ts",
+				"!src/**/*.test.ts",
+				"../../tsconfig.base.json",
+				"tsconfig.build.json",
+				"tsconfig.cjs.json",
+				"tsconfig.esm.json"
+			]
+		}
 	}
 }

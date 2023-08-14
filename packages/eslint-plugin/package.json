@@ -22,7 +22,6 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"prepublishOnly": "npm run test && npm run build",
-		"build": "rimraf dist && tsc -p tsconfig.build.json",
 		"test": "jest",
 		"lint": "eslint \"**/*.{js,ts}\"",
 		"format": "prettier --write \"**/*.{js,ts,json,md}\""
