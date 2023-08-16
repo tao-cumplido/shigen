@@ -30,7 +30,7 @@
 	"main": "./dist/cjs/index.js",
 	"scripts": {
 		"build": "wireit",
-		"test": "tsx --test src/**/*.test.ts"
+		"test": "wireit"
 	},
 	"wireit": {
 		"build:cjs": {
@@ -61,6 +61,13 @@
 				"tsconfig.cjs.json",
 				"tsconfig.esm.json"
 			]
+		},
+		"test": {
+			"command": "tsx --test src/*.test.ts",
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
 		}
 	}
 }

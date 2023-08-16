@@ -1,4 +1,7 @@
 {
 	"files": [],
-	"references": [{ "path": "packages/merge/tsconfig.build.json" }, { "path": "packages/merge/tsconfig.test.json" }]
+	"references": [
+		{ "path": "packages/eslint-plugin/tsconfig.test.json" },
+		{ "path": "packages/merge/tsconfig.test.json" }
+	]
 }

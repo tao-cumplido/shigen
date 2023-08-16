@@ -8,7 +8,9 @@
 	"scripts": {
 		"build": "npm run --workspaces --if-present build",
 		"postbuild": "node postbuild.mjs",
-		"test": "npm run --workspaces --if-present test"
+		"test": "npm run --workspaces --if-present test",
+		"lint": "eslint \"**/*.{js,ts}\"",
+		"format": "prettier --write \"**/*.{js,ts,json,md}\""
 	},
 	"devDependencies": {
 		"@types/node": "20.4.8",
