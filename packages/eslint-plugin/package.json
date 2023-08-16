@@ -1,0 +1,81 @@
+{
+	"name": "@shigen/eslint-plugin",
+	"version": "0.2.0",
+	"description": "General purpose plugin for ESLint",
+	"keywords": [
+		"eslint",
+		"lint",
+		"js",
+		"javascript",
+		"ts",
+		"typescript",
+		"es6"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/eslint-plugin",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"files": [
+		"readme.md",
+		"dist/**/*"
+	],
+	"main": "dist/index.js",
+	"scripts": {
+		"prepublishOnly": "wireit",
+		"test": "wireit",
+		"build": "wireit"
+	},
+	"wireit": {
+		"prepublishOnly": {
+			"dependencies": [
+				"test",
+				"build"
+			]
+		},
+		"test": {
+			"command": "tsx --test src/rules/*.test.ts src/rules/experimental/*.test.ts",
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		},
+		"build": {
+			"command": "tsc --build tsconfig.build.json",
+			"clean": "if-file-deleted",
+			"files": [
+				"src/**/*.ts",
+				"!src/**/*.test.ts",
+				"!src/tools/test.ts",
+				"../../tsconfig.base.json",
+				"tsconfig.build.json"
+			],
+			"output": [
+				"dist/**",
+				"*.tsbuildinfo"
+			]
+		}
+	},
+	"engines": {
+		"node": "^16.7.0 || >=18.6.0"
+	},
+	"dependencies": {
+		"tslib": "~2.6.1"
+	},
+	"devDependencies": {
+		"@types/eslint": "8.37.0",
+		"@typescript-eslint/parser": "5.48.0",
+		"@typescript-eslint/types": "5.48.0",
+		"ajv": "8.12.0",
+		"eslint": "8.31.0",
+		"dedent": "1.5.1"
+	},
+	"peerDependencies": {
+		"@typescript-eslint/parser": "^5.0.0",
+		"eslint": "^8.0.0"
+	},
+	"peerDependenciesMeta": {
+		"@typescript-eslint/parser": {
+			"optional": true
+		}
+	}
+}

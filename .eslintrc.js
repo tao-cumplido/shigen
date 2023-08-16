@@ -1,6 +1,4 @@
-const { readFileSync } = require('fs'); // don't use the node: protocol yet, as vscode still runs node 14
-
-const tsConfig = JSON.parse(readFileSync('tsconfig.json', 'utf-8'));
+const glob = require('fast-glob');
 
 module.exports = {
 	env: {
@@ -128,7 +126,7 @@ module.exports = {
 			parser: '@typescript-eslint/parser',
 			parserOptions: {
 				sourceType: 'module',
-				project: tsConfig.references.map(({ path }) => path),
+				project: glob.sync('packages/**/tsconfig?(.test).json'),
 			},
 			plugins: ['@typescript-eslint'],
 			rules: {
