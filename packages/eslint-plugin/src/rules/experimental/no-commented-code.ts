@@ -72,7 +72,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 			return (
 				context.parserPath.includes('@typescript-eslint') &&
 				// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-				!(error instanceof require('@typescript-eslint/typescript-estree/dist/node-utils').TSError)
+				!(error instanceof require('@typescript-eslint/typescript-estree').TSError)
 			);
 		}
 
