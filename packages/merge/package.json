@@ -63,7 +63,7 @@
 			]
 		},
 		"test": {
-			"command": "tsx --test src/*.test.ts",
+			"command": "npx -c 'tsx --tsconfig tsconfig.test.json --test src/**/*.test.ts'",
 			"files": [
 				"src/**/*.ts"
 			],
