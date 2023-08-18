@@ -80,6 +80,19 @@ test.describe('rule: group-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
+		test('commented lines in group', () => {
+			const report = reporter.lint(
+				dedent`
+					import 'fs';
+					// import 'assert';
+					import 'path';
+				`,
+				[],
+			);
+
+			assert.equal(report.result, LintResult.Valid);
+		});
+
 		test('type imports', () => {
 			const report = reporter.lint(
 				dedent`
