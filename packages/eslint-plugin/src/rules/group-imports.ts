@@ -1,6 +1,5 @@
-import { isAbsolute } from 'path';
-
-import builtinModules from 'builtin-modules';
+import module from 'node:module';
+import { isAbsolute } from 'node:path';
 
 import type { ImportModuleDeclaration } from '../tools/ast';
 import type { RuleContext, RuleModule } from '../tools/rule';
@@ -81,18 +80,18 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 	}
 
 	// split path at / delimiter but keep first / for absolute paths
-	const [module] = importPath.split(/(?=^\/)|\//u);
+	const [moduleName] = importPath.split(/(?=^\/)|\//u);
 
-	if (!module) {
+	if (!moduleName) {
 		throw new Error(`group-imports: unexpected undefined module name for path '${importPath}'`);
 	}
 
 	let moduleClass = ModuleClass.External;
 
-	if (builtinModules.includes(module.replace(/^node:/u, ''))) {
+	if (module.isBuiltin(moduleName)) {
 		moduleClass = ModuleClass.Node;
-	} else if (/^(?:\/|\.)/u.exec(module)) {
-		moduleClass = isAbsolute(module) ? ModuleClass.Absolute : ModuleClass.Relative;
+	} else if (/^(?:\/|\.)/u.exec(moduleName)) {
+		moduleClass = isAbsolute(moduleName) ? ModuleClass.Absolute : ModuleClass.Relative;
 	}
 
 	const classIndex = findIndex((group) => {
