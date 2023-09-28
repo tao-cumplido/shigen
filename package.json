@@ -13,15 +13,15 @@
 		"format": "prettier --write \"**/*.{js,ts,json,md}\""
 	},
 	"devDependencies": {
-		"@types/node": "20.4.8",
-		"@typescript-eslint/eslint-plugin": "5.48.0",
-		"@typescript-eslint/parser": "5.48.0",
-		"eslint": "8.31.0",
-		"eslint-plugin-style": "0.2.0",
-		"fast-glob": "3.2.12",
-		"prettier": "2.8.2",
-		"tsx": "3.12.7",
-		"typescript": "4.9.4",
-		"wireit": "0.10.0"
+		"@shigen/eslint-plugin": "0.3.1",
+		"@types/node": "20.7.1",
+		"@typescript-eslint/eslint-plugin": "6.7.3",
+		"@typescript-eslint/parser": "6.7.3",
+		"eslint": "8.50.0",
+		"fast-glob": "3.3.1",
+		"prettier": "3.0.3",
+		"tsx": "3.13.0",
+		"typescript": "5.2.2",
+		"wireit": "0.14.0"
 	}
 }

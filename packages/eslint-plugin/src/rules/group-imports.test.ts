@@ -1,7 +1,7 @@
 import assert from 'node:assert';
+import test from 'node:test';
 
 import dedent from 'dedent';
-import test from 'node:test';
 
 import { LintReporter, LintResult } from '../tools/test';
 import { rule, ModuleClass, TypeImportConfiguration } from './group-imports';

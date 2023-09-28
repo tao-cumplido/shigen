@@ -4,7 +4,7 @@ module.exports = {
 	env: {
 		es2021: true,
 	},
-	plugins: ['style'],
+	plugins: ['@shigen'],
 	rules: {
 		// https://eslint.org/docs/rules/#possible-problems
 		'array-callback-return': 'error',
@@ -96,9 +96,8 @@ module.exports = {
 		'require-yield': 'error',
 		'yoda': 'error',
 
-		// https://github.com/tao-cumplido/eslint-plugin-style#rules
-		'style/group-imports': ['error', { class: 'node' }, { class: 'external' }, { class: 'relative' }],
-		'style/sort-imports': ['error', { caseGroups: true, typesInGroup: 'top' }],
+		'@shigen/group-imports': ['error', { class: 'node' }, { class: 'external' }, { class: 'relative' }],
+		'@shigen/sort-imports': ['error', { caseGroups: true, typesInGroup: 'top' }],
 		// 'style/experimental/no-commented-code': [
 		// 	'warn',
 		// 	{
@@ -141,7 +140,6 @@ module.exports = {
 					},
 				],
 				'@typescript-eslint/no-dupe-class-members': 'error',
-				'@typescript-eslint/no-duplicate-imports': 'error',
 				'@typescript-eslint/no-empty-function': ['error', { allow: ['decoratedFunctions'] }],
 				'@typescript-eslint/no-invalid-this': 'error',
 				'@typescript-eslint/no-loop-func': 'error',
@@ -253,11 +251,11 @@ module.exports = {
 				'@typescript-eslint/no-misused-new': 'error',
 				'@typescript-eslint/no-namespace': 'error',
 				'@typescript-eslint/no-non-null-assertion': 'error',
-				'@typescript-eslint/no-parameter-properties': 'error',
 				'@typescript-eslint/no-require-imports': 'error',
 				'@typescript-eslint/no-this-alias': 'error',
 				'@typescript-eslint/no-unnecessary-type-constraint': 'error',
 				'@typescript-eslint/no-var-requires': 'error',
+				'@typescript-eslint/parameter-properties': 'error',
 				'@typescript-eslint/prefer-as-const': 'error',
 				'@typescript-eslint/prefer-for-of': 'error',
 				'@typescript-eslint/prefer-function-type': 'error',
@@ -296,7 +294,7 @@ module.exports = {
 				'@typescript-eslint/prefer-string-starts-ends-with': 'error',
 				'@typescript-eslint/promise-function-async': 'error',
 				'@typescript-eslint/require-array-sort-compare': 'error',
-				'@typescript-eslint/restrict-plus-operands': ['error', { checkCompoundAssignments: true }],
+				'@typescript-eslint/restrict-plus-operands': ['error'],
 				'@typescript-eslint/restrict-template-expressions': 'error',
 				'@typescript-eslint/switch-exhaustiveness-check': 'error',
 			},
