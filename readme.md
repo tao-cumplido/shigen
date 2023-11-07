@@ -7,7 +7,4 @@ Monorepo for packages in the `@shigen` scope. This scope is used to collect smal
 
 Requirements
 
-- Node.js >= 20
-
-> [!WARNING]  
-> NPM defaults to run scripts in `/bin/sh` or `cmd.exe`. At least on macOS you need to append `script-shell=/bin/zsh` to `~/.npmrc` for some scripts to run.
+- Node.js >= 21

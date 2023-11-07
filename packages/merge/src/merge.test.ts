@@ -1,14 +1,19 @@
 import assert from 'node:assert';
 import test from 'node:test';
 
+import { expectTypeOf } from 'expect-type';
+
 import { deepMerge, merge } from './merge.js';
 
 test('merge arrays', () => {
 	const target = [1, 2, 3] as const;
 	const source = [0, 0] as const;
-	const result = merge(target, source);
 
-	assert.deepEqual(result, [0, 0, 3]);
+	const result = merge(target, source);
+	const expected = [0, 0, 3] as const;
+
+	expectTypeOf(result).toMatchTypeOf(expected);
+	assert.deepEqual(result, expected);
 });
 
 test('merge objects', () => {
@@ -24,33 +29,44 @@ test('merge objects', () => {
 
 	const result = merge(target, source);
 
-	assert.deepEqual(result, {
+	const expected = {
 		a: 1,
 		b: 0,
 		c: 1,
-	});
+	} as const;
+
+	expectTypeOf(result).toMatchTypeOf(expected);
+	assert.deepEqual(result, expected);
 });
 
 test('merge source array', () => {
 	const target = { a: 0 } as const;
 	const source = [0] as const;
+
 	const result = merge(target, source);
 
-	assert.deepEqual(result, {
+	const expected = {
 		0: 0,
 		a: 0,
-	});
+	} as const;
+
+	expectTypeOf(result).toMatchTypeOf(expected);
+	assert.deepEqual(result, expected);
 });
 
 test('merge target array', () => {
 	const target = [0] as const;
 	const source = { a: 0 } as const;
+
 	const result = merge(target, source);
 
-	assert.deepEqual(result, {
+	const expected = {
 		0: 0,
 		a: 0,
-	});
+	} as const;
+
+	expectTypeOf(result).toMatchTypeOf(expected);
+	assert.deepEqual(result, expected);
 });
 
 test('deepmerge', () => {
@@ -74,7 +90,7 @@ test('deepmerge', () => {
 
 	const result = deepMerge(target, source);
 
-	assert.deepEqual(result, {
+	const expected = {
 		a: 1,
 		b: [{ a: 0, b: 0 }, 2, 1],
 		c: {
@@ -83,5 +99,8 @@ test('deepmerge', () => {
 		},
 		d: 0,
 		e: 0,
-	});
+	} as const;
+
+	expectTypeOf(result).toMatchTypeOf(expected);
+	assert.deepEqual(result, expected);
 });
