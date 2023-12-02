@@ -1,0 +1,38 @@
+{
+	"name": "@shigen/types",
+	"version": "0.1.0",
+	"description": "Collection of TypeScript utility types",
+	"keywords": [
+		"typescript",
+		"ts",
+		"types",
+		"utility",
+		"util",
+		"utilities",
+		"tools",
+		"generics"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/types",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"scripts": {
+		"test": "wireit"
+	},
+	"wireit": {
+		"test": {
+			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"dependencies": [
+				{
+					"script": "test:types",
+					"cascade": false
+				}
+			],
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		}
+	},
+	"dependencies": {}
+}
