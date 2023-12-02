@@ -1,3 +1,4 @@
 node_modules
 dist
 package-lock.json
+packages/types/src/*.d.ts
