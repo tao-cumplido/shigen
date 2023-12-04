@@ -162,13 +162,6 @@ module.exports = {
 				'@typescript-eslint/adjacent-overload-signatures': 'error',
 				'@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
 				'@typescript-eslint/ban-tslint-comment': 'error',
-				'@typescript-eslint/ban-types': [
-					'error',
-					{
-						types: { BigInt: { fixWith: 'bigint' } },
-						extendDefaults: true,
-					},
-				],
 				'@typescript-eslint/class-literal-property-style': ['error', 'fields'],
 				'@typescript-eslint/consistent-type-assertions': [
 					'error',
