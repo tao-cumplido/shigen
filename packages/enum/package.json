@@ -1,0 +1,43 @@
+{
+	"name": "@nishin/enum",
+	"version": "0.3.0",
+	"description": "Simple enum implementation for JavaScript",
+	"keywords": [
+		"enum",
+		"javascript",
+		"typescript",
+		"esm"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/binary-reader/tree/main/packages/enum",
+	"bugs": "https://github.com/tao-cumplido/binary-reader/issues",
+	"scripts": {
+		"test": "wireit"
+	},
+	"wireit": {
+		"test:types": {
+			"command": "tsc --project tsconfig.test.json",
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		},
+		"test": {
+			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"dependencies": [
+				{
+					"script": "test:types",
+					"cascade": false
+				}
+			],
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		}
+	},
+	"dependencies": {
+		"type-fest": "^4.8.3"
+	}
+}
