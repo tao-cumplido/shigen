@@ -1,7 +1,7 @@
 {
-	"name": "@nishin/enum",
-	"version": "0.3.0",
-	"description": "Simple enum implementation for JavaScript",
+	"name": "@shigen/enum",
+	"version": "0.4.0",
+	"description": "Enums for JavaScript",
 	"keywords": [
 		"enum",
 		"javascript",
@@ -10,12 +10,27 @@
 	],
 	"license": "ISC",
 	"author": "Tao Cumplido",
-	"repository": "https://github.com/tao-cumplido/binary-reader/tree/main/packages/enum",
-	"bugs": "https://github.com/tao-cumplido/binary-reader/issues",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/enum",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
 	"scripts": {
+		"build": "wireit",
+		"postbuild": "node postbuild.mjs",
 		"test": "wireit"
 	},
 	"wireit": {
+		"build": {
+			"command": "tscd",
+			"clean": "if-file-deleted",
+			"files": [
+				"src/**/*.ts",
+				"!src/**/*.test.ts",
+				"../../tsconfig.base.json",
+				"tsconfig.json"
+			],
+			"output": [
+				"dist/**"
+			]
+		},
 		"test:types": {
 			"command": "tsc --project tsconfig.test.json",
 			"files": [
@@ -39,5 +54,19 @@
 	},
 	"dependencies": {
 		"type-fest": "^4.8.3"
-	}
+	},
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/module/enum.d.ts",
+				"default": "./dist/module/enum.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/enum.d.ts",
+				"default": "./dist/commonjs/enum.js"
+			}
+		}
+	},
+	"types": "./dist/commonjs/enum.d.ts",
+	"main": "./dist/commonjs/enum.js"
 }
