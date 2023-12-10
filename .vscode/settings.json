@@ -8,7 +8,7 @@
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"[javascript][typescript]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll.eslint": true
+			"source.fixAll.eslint": "explicit"
 		}
 	},
 	"[javascript][typescript][json][jsonc]": {
