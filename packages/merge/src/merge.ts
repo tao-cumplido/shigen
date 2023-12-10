@@ -1,5 +1,7 @@
 import type { Composite, DeepMerge, Merge, MergeFunction, MergeOptions } from './types.js';
 
+export type * from './types.js';
+
 declare function structuredClone(value: any): unknown;
 
 export function clone(target: unknown, source: unknown): unknown {

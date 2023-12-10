@@ -1,6 +1,6 @@
 {
 	"name": "@shigen/merge",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Merge and deep merge utility for nested data structures",
 	"keywords": [
 		"merge",
@@ -16,23 +16,30 @@
 	"bugs": "https://github.com/tao-cumplido/shigen/issues",
 	"scripts": {
 		"build": "wireit",
+		"postbuild": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd -p tsconfig.build.json",
+			"command": "tscd",
 			"clean": "if-file-deleted",
 			"files": [
 				"src/**/*.ts",
 				"!src/**/*.test.ts",
 				"../../tsconfig.base.json",
-				"tsconfig.build.json",
-				"tsconfig.cjs.json",
-				"tsconfig.esm.json"
+				"tsconfig.json"
 			],
 			"output": [
 				"dist/**"
 			]
+		},
+		"postbuild": {
+			"command": "attw --pack .",
+			"files": [
+				"dist/**",
+				"package.json"
+			],
+			"output": []
 		},
 		"test:types": {
 			"command": "tsc --project tsconfig.test.json",
@@ -58,15 +65,15 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/module/index.d.ts",
-				"default": "./dist/module/index.js"
+				"types": "./dist/module/merge.d.ts",
+				"default": "./dist/module/merge.js"
 			},
 			"require": {
-				"types": "./dist/commonjs/index.d.ts",
-				"default": "./dist/commonjs/index.js"
+				"types": "./dist/commonjs/merge.d.ts",
+				"default": "./dist/commonjs/merge.js"
 			}
 		}
 	},
-	"types": "./dist/commonjs/index.d.ts",
-	"main": "./dist/commonjs/index.js"
+	"types": "./dist/commonjs/merge.d.ts",
+	"main": "./dist/commonjs/merge.js"
 }
