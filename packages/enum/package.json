@@ -14,21 +14,20 @@
 	"bugs": "https://github.com/tao-cumplido/shigen/issues",
 	"scripts": {
 		"build": "wireit",
-		"postbuild": "node postbuild.mjs",
+		"postbuild": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd",
-			"clean": "if-file-deleted",
-			"files": [
-				"src/**/*.ts",
-				"!src/**/*.test.ts",
-				"../../tsconfig.base.json",
-				"tsconfig.json"
-			],
-			"output": [
-				"dist/**"
+			"command": "tscd"
+		},
+		"preserve-brand-type": {
+			"command": "node preserve-brand-type.mjs"
+		},
+		"postbuild": {
+			"command": "attw --pack .",
+			"dependencies": [
+				"preserve-brand-type"
 			]
 		},
 		"test:types": {
