@@ -214,7 +214,6 @@ module.exports = {
 						],
 					},
 				],
-				'@typescript-eslint/method-signature-style': ['error', 'property'],
 				'@typescript-eslint/naming-convention': [
 					'error',
 					{
@@ -236,6 +235,10 @@ module.exports = {
 						selector: 'classProperty',
 						modifiers: ['static', 'readonly'],
 						format: ['PascalCase'],
+					},
+					{
+						selector: 'typeProperty',
+						format: ['StrictPascalCase', 'strictCamelCase'],
 					},
 				],
 				'@typescript-eslint/no-empty-interface': 'error',

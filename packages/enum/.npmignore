@@ -1,0 +1,6 @@
+!dist/
+tsconfig*
+*.tsbuildinfo
+*.test.*
+.wireit
+preserve-brand-type.mjs
