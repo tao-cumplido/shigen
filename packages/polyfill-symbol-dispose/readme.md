@@ -1,7 +1,7 @@
 # Polyfill for `Symbol.dispose` and `Symbol.asyncDispose`
 
-[npm-image]: https://img.shields.io/npm/v/@shigen/enum.svg
-[npm-url]: https://npmjs.org/package/@shigen/enum
+[npm-image]: https://img.shields.io/npm/v/@shigen/polyfill-symbol-dispose.svg
+[npm-url]: https://npmjs.org/package/@shigen/polyfill-symbol-dispose
 
 [![NPM Version][npm-image]][npm-url]
 
