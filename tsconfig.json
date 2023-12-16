@@ -3,6 +3,7 @@
 	"references": [
 		{ "path": "packages/eslint-plugin/tsconfig.test.json" },
 		{ "path": "packages/merge/tsconfig.test.json" },
-		{ "path": "packages/enum/tsconfig.test.json" }
+		{ "path": "packages/enum/tsconfig.test.json" },
+		{ "path": "packages/polyfill-symbol-dispose/tsconfig.test.json" }
 	]
 }

@@ -1,3 +1,4 @@
+const path = require('node:path');
 const glob = require('fast-glob');
 
 module.exports = {
@@ -125,7 +126,13 @@ module.exports = {
 			parser: '@typescript-eslint/parser',
 			parserOptions: {
 				sourceType: 'module',
-				project: glob.sync('packages/**/tsconfig?(.test).json'),
+				project: glob.sync('packages/**/tsconfig?(.test).json').filter((configPath, _, source) => {
+					if (configPath.endsWith('.test.json')) {
+						return true;
+					}
+
+					return !source.includes(path.posix.join(path.posix.dirname(configPath), 'tsconfig.test.json'));
+				}),
 			},
 			plugins: ['@typescript-eslint'],
 			rules: {
@@ -254,7 +261,6 @@ module.exports = {
 				'@typescript-eslint/parameter-properties': 'error',
 				'@typescript-eslint/prefer-as-const': 'error',
 				'@typescript-eslint/prefer-for-of': 'error',
-				'@typescript-eslint/prefer-function-type': 'error',
 				'@typescript-eslint/prefer-optional-chain': 'error',
 				'@typescript-eslint/triple-slash-reference': 'error',
 
