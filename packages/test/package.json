@@ -1,6 +1,25 @@
 {
 	"name": "@shigen/test",
 	"version": "0.1.0",
+	"description": "Tools for testing",
+	"keywords": [
+		"test",
+		"file",
+		"system",
+		"fs",
+		"fixture",
+		"temp",
+		"async",
+		"await",
+		"using",
+		"symbol",
+		"dispose",
+		"asyncdispose"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/test",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
 	"scripts": {
 		"build": "wireit",
 		"postbuild": "wireit",
