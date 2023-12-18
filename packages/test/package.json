@@ -1,0 +1,50 @@
+{
+	"name": "@shigen/test",
+	"version": "0.1.0",
+	"scripts": {
+		"build": "wireit",
+		"postbuild": "wireit",
+		"test": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"command": "tscd"
+		},
+		"postbuild": {
+			"command": "attw --pack ."
+		},
+		"test": {
+			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		}
+	},
+	"engines": {
+		"node": "^18.18.0 || >=20.4.0"
+	},
+	"dependencies": {
+		"type-fest": "^4.8.3"
+	},
+	"peerDependencies": {
+		"@types/node": "^18.18.0 || >=20.4.0"
+	},
+	"peerDependenciesMeta": {
+		"@types/node": {
+			"optional": true
+		}
+	},
+	"exports": {
+		"./fs": {
+			"import": {
+				"types": "./dist/module/fs/fixture.d.ts",
+				"default": "./dist/module/fs/fixture.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/fs/fixture.d.ts",
+				"default": "./dist/commonjs/fs/fixture.js"
+			}
+		}
+	}
+}
