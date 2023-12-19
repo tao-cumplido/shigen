@@ -12,9 +12,13 @@ export type DataTree = {
 	readonly [key: string]: Buffer | DataTree;
 };
 
+// @ts-ignore
+type Execa$ = import('execa').Execa$;
+
 class Fixture {
 	#directory: TemporaryDirectory;
 	#fs: FsProxy;
+	#run: Execa$;
 
 	get id(): string {
 		return this.#directory.id;
@@ -28,9 +32,14 @@ class Fixture {
 		return this.#fs;
 	}
 
-	constructor(directory: TemporaryDirectory, fsProxy: FsProxy) {
+	get run(): Execa$ {
+		return this.#run;
+	}
+
+	constructor(directory: TemporaryDirectory, fsProxy: FsProxy, run: Execa$) {
 		this.#directory = directory;
 		this.#fs = fsProxy;
+		this.#run = run;
 	}
 
 	async exists(path = '.'): Promise<Boolean> {
@@ -42,8 +51,8 @@ class Fixture {
 		}
 	}
 
-	async remove(): Promise<boolean> {
-		return this.#directory.remove();
+	async remove(): Promise<void> {
+		await this.#directory.remove();
 	}
 
 	async [Symbol.asyncDispose](): Promise<void> {
@@ -65,7 +74,13 @@ async function writeDataTree(fsProxy: FsProxy, path: string, data: DataTree): Pr
 	}
 }
 
+// @ts-ignore
+let execa: typeof import('execa') | undefined;
+
 export async function createFixture(source: string | DataTree = {}): Promise<Fixture> {
+	// eslint-disable-next-line require-atomic-updates
+	execa ??= await import('execa');
+
 	const tempDir = await createTemporaryDirectory();
 	const fsProxy = createProxy(tempDir.path);
 
@@ -75,7 +90,7 @@ export async function createFixture(source: string | DataTree = {}): Promise<Fix
 		await writeDataTree(fsProxy, '', source);
 	}
 
-	return new Fixture(tempDir, fsProxy);
+	return new Fixture(tempDir, fsProxy, execa.$({ cwd: tempDir.path }));
 }
 
 export function textData(contents: string, encoding?: BufferEncoding): Buffer {

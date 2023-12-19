@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import type { PackageJson } from 'type-fest';
+
 import { createFixture, jsonData, textData } from './fixture.js';
 
 test('copy template', async () => {
@@ -71,9 +73,30 @@ test('"flat" tree', async () => {
 
 test('exists', async () => {
 	const fixture = await createFixture({ test: textData('') });
+
 	assert.equal(await fixture.exists(), true);
 	assert.equal(await fixture.exists('test'), true);
-	assert.equal(await fixture.remove(), true);
+
+	await fixture.remove();
+
 	assert.equal(await fixture.exists(), false);
-	assert.equal(await fixture.remove(), false);
+	assert.rejects(async () => fixture.remove());
+});
+
+test('run', async () => {
+	await using fixture = await createFixture({
+		'package.json': jsonData<PackageJson>({
+			name: 'test',
+			version: '0.0.0',
+			dependencies: {
+				'@bitfront/test-package': '1.0.0',
+			},
+		}),
+	});
+
+	assert.equal(await fixture.exists('node_modules'), false);
+
+	await fixture.run`pnpm install`;
+
+	assert.equal(await fixture.exists('node_modules'), true);
 });

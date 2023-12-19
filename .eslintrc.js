@@ -177,7 +177,7 @@ module.exports = {
 						objectLiteralTypeAssertions: 'allow-as-parameter',
 					},
 				],
-				'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+				'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', disallowTypeAnnotations: false }],
 				'@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'no-public' }],
 				'@typescript-eslint/explicit-module-boundary-types': ['error'],
 				'@typescript-eslint/member-ordering': [

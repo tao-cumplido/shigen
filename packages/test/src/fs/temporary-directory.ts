@@ -14,13 +14,8 @@ export class TemporaryDirectory {
 		this.path = path;
 	}
 
-	async remove(): Promise<boolean> {
-		try {
-			await fs.rm(this.path, { recursive: true });
-			return true;
-		} catch {
-			return false;
-		}
+	async remove(): Promise<void> {
+		await fs.rm(this.path, { recursive: true });
 	}
 
 	async [Symbol.asyncDispose](): Promise<void> {

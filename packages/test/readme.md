@@ -83,6 +83,12 @@ type DataTree = {
 Proxies calls to `node:fs/promises` to be relative to the fixture's root. Escaping the root with relative paths (`..`) is not allowed and will result in an error being thrown. In contrast to Node's native `fs` module, all path arguments must be given as strings. The `FsProxy` type reflects this restriction. `@types/node` is defined as an optional peer dependency and needs to be installed for the typings to work correctly.
 
 #### `Fixture`
+Instances of the `Fixture` class manage access to the fixture on the file system. Shell commands are executed from the fixture's directory with [`execa`'s script interface](https://github.com/sindresorhus/execa/blob/HEAD/docs/scripts.md) like this:
+
+```js
+await fixture.run`npm install`;
+```
+
 ```ts
 class Fixture {
 	/** The fixture's UUID */
@@ -93,6 +99,9 @@ class Fixture {
 
 	/** Access to the file system */
 	readonly fs: FsProxy;
+
+	/** Run shell commands inside the fixture's directory with execa's script interface */
+	readonly run: Execa$;
 
 	/** Convenience wrapper around fs.access */
 	exists(path?: string): Promise<Boolean>;

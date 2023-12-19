@@ -1,6 +1,6 @@
 {
 	"name": "@shigen/test",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Tools for testing",
 	"keywords": [
 		"test",
@@ -44,6 +44,7 @@
 		"node": "^18.18.0 || >=20.4.0"
 	},
 	"dependencies": {
+		"execa": "^8.0.1",
 		"type-fest": "^4.8.3"
 	},
 	"peerDependencies": {
