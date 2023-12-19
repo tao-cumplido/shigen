@@ -68,7 +68,7 @@ Create fixture at a randomely unique path inside the OS's default temporary dire
 - Passing a `DataTree` object with the defined directory structure and file contents.
 - Using the fixture's `fs` methods to write the files directly after creation.
 
-The fixture can be initialized with the `await using` syntax from the [Explicit Resource Management proposal](https://github.com/tc39/proposal-explicit-resource-management). This syntax is currently supported by transpiling with Babel or TypeScript 5.2+.
+The fixture can be initialized with the `await using` syntax from the [Explicit Resource Management proposal](https://github.com/tc39/proposal-explicit-resource-management). This syntax is currently supported by transpiling with Babel or TypeScript 5.2+. A polyfill is not needed since the supported Node.js versions already ship one.
 
 #### `DataTree`
 A recursive data structure that stores `Buffer`s to write to specified file paths.
