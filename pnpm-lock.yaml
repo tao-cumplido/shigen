@@ -92,8 +92,11 @@ importers:
 
   packages/test:
     dependencies:
+      '@shigen/polyfill-symbol-dispose':
+        specifier: 1.0.1
+        version: 1.0.1
       '@types/node':
-        specifier: ^18.18.0 || >=20.4.0
+        specifier: '>=18.0.0'
         version: 20.7.1
       execa:
         specifier: ^8.0.1
@@ -435,6 +438,10 @@ packages:
       eslint: 8.50.0
       tslib: 2.6.2
     dev: true
+
+  /@shigen/polyfill-symbol-dispose@1.0.1:
+    resolution: {integrity: sha512-g8OSf0SiNNRojr+2PJT8j1yj+TPt7mDCYbjYWQMVOeFWcrDC9NEM87tElI/e6REpykSsKckoup8v0tcquQ6K5w==}
+    dev: false
 
   /@sindresorhus/is@4.6.0:
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}

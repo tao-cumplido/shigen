@@ -97,15 +97,14 @@ module.exports = {
 		'require-yield': 'error',
 		'yoda': 'error',
 
-		'@shigen/group-imports': ['error', { class: 'node' }, { class: 'external' }, { class: 'relative' }],
+		'@shigen/group-imports': [
+			'error',
+			'@shigen/polyfill-symbol-dispose',
+			{ class: 'node' },
+			{ class: 'external' },
+			{ class: 'relative' },
+		],
 		'@shigen/sort-imports': ['error', { caseGroups: true, typesInGroup: 'top' }],
-		// 'style/experimental/no-commented-code': [
-		// 	'warn',
-		// 	{
-		// 		ignorePatterns: ['^https?://', '^prettier-'],
-		// 		extendDefaultIgnorePatterns: true,
-		// 	},
-		// ],
 	},
 	overrides: [
 		{

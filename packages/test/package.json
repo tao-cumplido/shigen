@@ -1,6 +1,6 @@
 {
 	"name": "@shigen/test",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "Tools for testing",
 	"keywords": [
 		"test",
@@ -41,14 +41,15 @@
 		}
 	},
 	"engines": {
-		"node": "^18.18.0 || >=20.4.0"
+		"node": ">=18.0.0"
 	},
 	"dependencies": {
+		"@shigen/polyfill-symbol-dispose": "1.0.1",
 		"execa": "^8.0.1",
 		"type-fest": "^4.8.3"
 	},
 	"peerDependencies": {
-		"@types/node": "^18.18.0 || >=20.4.0"
+		"@types/node": ">=18.0.0"
 	},
 	"peerDependenciesMeta": {
 		"@types/node": {

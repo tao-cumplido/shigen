@@ -1,3 +1,5 @@
+import '@shigen/polyfill-symbol-dispose';
+
 import fs from 'node:fs/promises';
 import { dirname, join as joinPaths } from 'node:path';
 
@@ -12,7 +14,7 @@ export type DataTree = {
 	readonly [key: string]: Buffer | DataTree;
 };
 
-// @ts-ignore
+// @ts-ignore: aliasing because importing types from an ESM only module confuses TS
 type Execa$ = import('execa').Execa$;
 
 class Fixture {
