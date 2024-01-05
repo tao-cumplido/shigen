@@ -1,0 +1,48 @@
+{
+	"name": "@shigen/code-tag",
+	"version": "0.1.0",
+	"description": "",
+	"keywords": [],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/code-tag",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"scripts": {
+		"build": "wireit",
+		"postbuild": "wireit",
+		"test": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"command": "tscd"
+		},
+		"postbuild": {
+			"command": "attw --pack ."
+		},
+		"test": {
+			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		}
+	},
+	"dependencies": {
+		"dedent": "^1.5.1",
+		"type-fest": "^4.9.0"
+	},
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/module/code.d.ts",
+				"default": "./dist/module/code.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/code.d.ts",
+				"default": "./dist/commonjs/code.js"
+			}
+		}
+	},
+	"types": "./dist/commonjs/code.d.ts",
+	"main": "./dist/commonjs/code.js"
+}
