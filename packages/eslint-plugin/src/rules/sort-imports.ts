@@ -88,7 +88,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 	create(context) {
 		const configuration = { ...defaultConfiguration, ...context.options[0] };
 
-		const source = context.getSourceCode();
+		const source = context.sourceCode;
 
 		const partition = <T extends Node>(result: T[][], node: T, index: number, from: T[]) => {
 			if (index > 0 && linesBetween(from[index - 1], node) > 0) {

@@ -135,37 +135,3 @@ The default configuration is:
 	"inlineTypes": "ignore"
 }
 ```
-
-## Experimental rules
-
-:warning: These rules are experimental and may produce unexpected behavior. :warning:
-
-- These rules are not auto-fixable!
-- Consider setting the level to `"warn"` instead of `"error"`.
-
-### `@shigen/experimental/no-commented-code`
-
-This rule is meant to detect commented code. It does so by uncommenting comment nodes and run the whole file with the uncommented part through the parser. If the parser produces a valid AST the comment is marked as commented code. Generally it should work with any parser but has only been tested with the default parser `espree` and `@typescript-eslint/parser`. For example, `// type A = 0;` is not commented code with `espree` but it is with `@typescript-eslint/parser`.
-
-False positives will probably happen, single words for example, are valid identifiers in many positions and `eslint-disable-next-line` is parsed as a `BinaryExpression`. Common patterns can be ignored and `^eslint-` is ignored by default. Additionally, doc comments are ignored as well, this cannot be turned off.
-
-The following configuration options can be set:
-
-```ts
-interface Configuration {
-	ignorePatterns?: string[];
-	extendDefaultIgnorePatterns?: boolean;
-}
-```
-
-- `ignorePatterns`: When a comment matches one of the specified patterns it will be ignored. The expressions are tested against the trimmed text content of the comment. Invalid regular expressions will be ignored.
-- `extendDefaultIgnorePatterns`: Whether to keep the default ignore patterns without explicitly redefining them.
-
-The default configuration is:
-
-```json
-{
-	"ignorePatterns": ["^eslint-", "^@ts-"],
-	"extendDefaultIgnorePatterns": false
-}
-```

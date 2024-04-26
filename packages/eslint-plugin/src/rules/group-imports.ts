@@ -205,7 +205,7 @@ export const rule: RuleModule<GroupConfiguration[]> = {
 	create(context) {
 		const groupConfigurations = context.options.length ? context.options : defaultConfiguration;
 
-		const source = context.getSourceCode();
+		const source = context.sourceCode;
 
 		const imports = importModules(source).map((node) => {
 			return {
