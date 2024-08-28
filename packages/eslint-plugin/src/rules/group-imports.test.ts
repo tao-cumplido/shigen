@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import test from 'node:test';
 
+import tseslint from 'typescript-eslint';
 import dedent from 'dedent';
 
 import { LintReporter, LintResult } from '../tools/test';
@@ -9,8 +10,10 @@ import { rule, ModuleClass, TypeImportConfiguration } from './group-imports';
 test.describe('rule: group-imports', () => {
 	const reporter = new LintReporter(rule);
 
-	const tsParser = {
-		parser: '@typescript-eslint/parser',
+	const tsParserConfig = {
+		languageOptions: {
+			parser: tseslint.parser as any,
+		},
 	};
 
 	test.describe('valid code', () => {
@@ -90,7 +93,7 @@ test.describe('rule: group-imports', () => {
 					import 'foo';
 				`,
 				[],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Valid);
@@ -125,7 +128,7 @@ test.describe('rule: group-imports', () => {
 						types: TypeImportConfiguration.Exclude,
 					},
 				],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Valid);
@@ -372,7 +375,7 @@ test.describe('rule: group-imports', () => {
 					import 'foo';
 				`,
 				[],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -416,7 +419,7 @@ test.describe('rule: group-imports', () => {
 						types: TypeImportConfiguration.Exclude,
 					},
 				],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);

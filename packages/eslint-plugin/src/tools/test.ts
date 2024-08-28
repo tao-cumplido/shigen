@@ -37,7 +37,6 @@ export class LintReporter<Configuration extends unknown[]> {
 	private readonly rule: RuleModule<Configuration>;
 
 	constructor(rule: RuleModule<Configuration>) {
-		this.linter.defineRule('test', rule);
 		this.rule = rule;
 	}
 
@@ -58,20 +57,22 @@ export class LintReporter<Configuration extends unknown[]> {
 
 		const config: Linter.Config = {
 			...linterConfig,
-			parserOptions: {
+			languageOptions: {
 				ecmaVersion: 2018,
 				sourceType: 'module',
-				...linterConfig?.parserOptions,
+				...linterConfig?.languageOptions,
+			},
+			plugins: {
+				test: {
+					rules: {
+						test: this.rule,
+					},
+				},
 			},
 			rules: {
-				test: ['error', ...options],
+				'test/test': ['error', ...options],
 			},
 		};
-
-		if (config.parser) {
-			// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-argument
-			this.linter.defineParser(config.parser, require(config.parser));
-		}
 
 		const errorReport = this.linter.verify(source, config, filename);
 		const fatalParsingErrors = errorReport.filter(({ fatal }) => fatal).map(({ message }) => new Error(message));

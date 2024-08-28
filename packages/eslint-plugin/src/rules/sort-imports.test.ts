@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import test from 'node:test';
 
+import tseslint from 'typescript-eslint';
 import dedent from 'dedent';
 
 import { LintReporter, LintResult } from '../tools/test';
@@ -9,8 +10,10 @@ import { rule, TypeImportGroupPosition, TypeImportInlinePosition } from './sort-
 test.describe('rule: sort-imports', () => {
 	const reporter = new LintReporter(rule);
 
-	const tsParser = {
-		parser: '@typescript-eslint/parser',
+	const tsParserConfig = {
+		languageOptions: {
+			parser: tseslint.parser as any,
+		},
 	};
 
 	test.describe('valid code', () => {
@@ -114,7 +117,7 @@ test.describe('rule: sort-imports', () => {
 					import type bar from 'bar';
 				`,
 				[],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Valid);
@@ -280,7 +283,7 @@ test.describe('rule: sort-imports', () => {
 					import type foo from 'foo';
 				`,
 				[],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -305,7 +308,7 @@ test.describe('rule: sort-imports', () => {
 					import type bar from 'bar';
 				`,
 				[{ typesInGroup: TypeImportGroupPosition.Top }],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -330,7 +333,7 @@ test.describe('rule: sort-imports', () => {
 					import 'bar';
 				`,
 				[{ typesInGroup: TypeImportGroupPosition.Bottom }],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -355,7 +358,7 @@ test.describe('rule: sort-imports', () => {
 					import type bar from 'bar';
 				`,
 				[{ typesInGroup: TypeImportGroupPosition.AboveValue }],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -380,7 +383,7 @@ test.describe('rule: sort-imports', () => {
 					import 'bar';
 				`,
 				[{ typesInGroup: TypeImportGroupPosition.BelowValue }],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -397,7 +400,7 @@ test.describe('rule: sort-imports', () => {
 		});
 
 		test('inline types', () => {
-			const report = reporter.lint(dedent`import { type b, a } from 'foo';`, [], tsParser);
+			const report = reporter.lint(dedent`import { type b, a } from 'foo';`, [], tsParserConfig);
 
 			assert.equal(report.result, LintResult.Fixed);
 			assert.equal(report.errors.length, 1);
@@ -408,7 +411,7 @@ test.describe('rule: sort-imports', () => {
 			const report = reporter.lint(
 				dedent`import { a, type b } from 'foo';`,
 				[{ inlineTypes: TypeImportInlinePosition.Start }],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -420,7 +423,7 @@ test.describe('rule: sort-imports', () => {
 			const report = reporter.lint(
 				dedent`import { type a, b } from 'foo';`,
 				[{ inlineTypes: TypeImportInlinePosition.End }],
-				tsParser,
+				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
