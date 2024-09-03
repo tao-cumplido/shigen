@@ -35,6 +35,7 @@ export type EnumConstructor<
 		this: Class,
 		key: Read<Config, 'Key', number>,
 	): Class['prototype'] | undefined;
+	keys(): IterableIterator<Read<Config, 'Key', number>>;
 	values<Class extends { prototype: EnumLike<Config> }>(this: Class): IterableIterator<Class['prototype']>;
 };
 
@@ -82,6 +83,10 @@ export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimi
 	return class Enum {
 		static lookupKey(key: EnumKeyPrimitive) {
 			return instances.get(key);
+		}
+
+		static keys() {
+			return instances.keys();
 		}
 
 		static values() {

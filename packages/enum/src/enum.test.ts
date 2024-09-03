@@ -17,12 +17,14 @@ test('defaults', () => {
 
 	expectTypeOf(E.A.key).toEqualTypeOf<number>();
 	expectTypeOf(E.lookupKey(0)).toEqualTypeOf<E | undefined>();
+	expectTypeOf(E.keys()).toEqualTypeOf<IterableIterator<number>>();
 	expectTypeOf(E.values()).toEqualTypeOf<IterableIterator<E>>();
 
 	assert.equal(E.A.key, 0);
 	assert.equal(E.B.key, 1);
 	assert.equal(E.lookupKey(0), E.A);
 	assert.equal(E.lookupKey(1), E.B);
+	assert.deepEqual([...E.keys()], [0, 1]);
 	assert.deepEqual([...E.values()], [E.A, E.B]);
 });
 
