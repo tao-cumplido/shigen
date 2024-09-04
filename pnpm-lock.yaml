@@ -65,12 +65,12 @@ importers:
 
   packages/eslint-plugin:
     dependencies:
+      '@shigen/enum':
+        specifier: 0.5.0
+        version: 0.5.0
       '@typescript-eslint/parser':
         specifier: ^8.0.0
         version: 8.0.1(eslint@9.9.1)(typescript@5.2.2)
-      tslib:
-        specifier: ~2.7.0
-        version: 2.7.0
     devDependencies:
       '@types/eslint':
         specifier: 9.6.1
@@ -487,6 +487,12 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+
+  /@shigen/enum@0.5.0:
+    resolution: {integrity: sha512-pWMZGa1NaA4D+6MnEN0Ex0d+dCg0d9Ddkt9sfzVC6VqDXV8++Ql/J1/T4d66xNsLAEbZNhPexcBxdznrzn+VQw==}
+    dependencies:
+      type-fest: 4.9.0
+    dev: false
 
   /@shigen/eslint-plugin@0.3.1(@typescript-eslint/parser@6.7.3)(eslint@8.50.0):
     resolution: {integrity: sha512-VAjtwFkjm3aFCak2J9fdgAvQZCwEf4qJFO5XOanDZpiayupa++aaV/F9vagWNzQuASVqpV5fxSedfXwuGPW6Yw==}
@@ -2412,10 +2418,6 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
-
-  /tslib@2.7.0:
-    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
-    dev: false
 
   /tsx@4.7.3:
     resolution: {integrity: sha512-+fQnMqIp/jxZEXLcj6WzYy9FhcS5/Dfk8y4AtzJ6ejKcKqmfTF8Gso/jtrzDggCF2zTU20gJa6n8XqPYwDAUYQ==}

@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 import dedent from 'dedent';
 
 import { LintReporter, LintResult } from '../tools/test';
-import { rule, ModuleClass, TypeImportConfiguration } from './group-imports';
+import { rule, ModuleClass, TypeImport } from './group-imports';
 
 test.describe('rule: group-imports', () => {
 	const reporter = new LintReporter(rule);
@@ -49,7 +49,7 @@ test.describe('rule: group-imports', () => {
 
 					import 'fs';
 				`,
-				[{ class: ModuleClass.External }, { class: ModuleClass.Node }],
+				[{ class: ModuleClass.External.key }, { class: ModuleClass.Node.key }],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
@@ -64,7 +64,7 @@ test.describe('rule: group-imports', () => {
 
 					import 'path';
 				`,
-				['fs', { class: ModuleClass.External }, { class: ModuleClass.Node }],
+				['fs', { class: ModuleClass.External.key }, { class: ModuleClass.Node.key }],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
@@ -77,7 +77,7 @@ test.describe('rule: group-imports', () => {
 					import 'foo';
 					import 'path';
 				`,
-				[[{ class: ModuleClass.Node }, { class: ModuleClass.External }]],
+				[[{ class: ModuleClass.Node.key }, { class: ModuleClass.External.key }]],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
@@ -112,20 +112,20 @@ test.describe('rule: group-imports', () => {
 				`,
 				[
 					{
-						class: ModuleClass.Node,
-						types: TypeImportConfiguration.Only,
+						class: ModuleClass.Node.key,
+						types: TypeImport.Only.key,
 					},
 					{
-						class: ModuleClass.Node,
-						types: TypeImportConfiguration.Exclude,
-					},
-					{
-						path: 'foo',
-						types: TypeImportConfiguration.Only,
+						class: ModuleClass.Node.key,
+						types: TypeImport.Exclude.key,
 					},
 					{
 						path: 'foo',
-						types: TypeImportConfiguration.Exclude,
+						types: TypeImport.Only.key,
+					},
+					{
+						path: 'foo',
+						types: TypeImport.Exclude.key,
 					},
 				],
 				tsParserConfig,
@@ -341,7 +341,7 @@ test.describe('rule: group-imports', () => {
 					import 'baz';
 					import 'foo/d';
 				`,
-				[[{ class: ModuleClass.Node }, { class: ModuleClass.Absolute }], 'foo'],
+				[[{ class: ModuleClass.Node.key }, { class: ModuleClass.Absolute.key }], 'foo'],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -403,20 +403,20 @@ test.describe('rule: group-imports', () => {
 				`,
 				[
 					{
-						class: ModuleClass.Node,
-						types: TypeImportConfiguration.Only,
+						class: ModuleClass.Node.key,
+						types: TypeImport.Only.key,
 					},
 					{
-						class: ModuleClass.Node,
-						types: TypeImportConfiguration.Exclude,
-					},
-					{
-						path: 'foo',
-						types: TypeImportConfiguration.Only,
+						class: ModuleClass.Node.key,
+						types: TypeImport.Exclude.key,
 					},
 					{
 						path: 'foo',
-						types: TypeImportConfiguration.Exclude,
+						types: TypeImport.Only.key,
+					},
+					{
+						path: 'foo',
+						types: TypeImport.Exclude.key,
 					},
 				],
 				tsParserConfig,

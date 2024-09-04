@@ -1,5 +1,7 @@
-import module from 'node:module';
+import { isBuiltin } from 'node:module';
 import { isAbsolute } from 'node:path';
+
+import { Enum } from '@shigen/enum';
 
 import type { ImportModuleDeclaration } from '../tools/ast';
 import type { RuleContext, RuleModule } from '../tools/rule';
@@ -7,27 +9,33 @@ import { extrema, importModules, isTypeImportOrExport, linesBetween, onlyWhiteSp
 import { fixRange } from '../tools/rule';
 import { sortByPath } from '../tools/sort';
 
-export enum ModuleClass {
-	Node = 'node',
-	External = 'external',
-	Absolute = 'absolute',
-	Relative = 'relative',
+export type ModuleClassOption = 'node' | 'external' | 'absolute' | 'relative';
+export type TypeImportOption = 'include' | 'exclude' | 'only';
+
+const moduleClassId = Symbol();
+const typeImportId = Symbol();
+
+export class ModuleClass extends Enum<{ Key: ModuleClassOption }>(moduleClassId) {
+	static readonly Node = new ModuleClass(moduleClassId, { key: 'node' });
+	static readonly External = new ModuleClass(moduleClassId, { key: 'external' });
+	static readonly Absolute = new ModuleClass(moduleClassId, { key: 'absolute' });
+	static readonly Relative = new ModuleClass(moduleClassId, { key: 'relative' });
 }
 
-export enum TypeImportConfiguration {
-	Include = 'include',
-	Exclude = 'exclude', // eslint-disable-line @typescript-eslint/no-shadow
-	Only = 'only',
+export class TypeImport extends Enum<{ Key: TypeImportOption }>(typeImportId) {
+	static readonly Include = new TypeImport(typeImportId, { key: 'include' });
+	static readonly Exclude = new TypeImport(typeImportId, { key: 'exclude' });
+	static readonly Only = new TypeImport(typeImportId, { key: 'only' });
 }
 
 interface ModuleClassConfiguration {
-	class: ModuleClass;
-	types?: TypeImportConfiguration;
+	class: ModuleClassOption;
+	types?: TypeImportOption;
 }
 
 interface ModulePathConfiguration {
 	path: string;
-	types?: TypeImportConfiguration;
+	types?: TypeImportOption;
 }
 
 type ModuleConfiguration = string | ModulePathConfiguration | ModuleClassConfiguration;
@@ -35,10 +43,10 @@ type ModuleConfiguration = string | ModulePathConfiguration | ModuleClassConfigu
 export type GroupConfiguration = ModuleConfiguration | ModuleConfiguration[];
 
 const defaultConfiguration: GroupConfiguration[] = [
-	{ class: ModuleClass.Node },
-	{ class: ModuleClass.External },
-	{ class: ModuleClass.Absolute },
-	{ class: ModuleClass.Relative },
+	{ class: ModuleClass.Node.key },
+	{ class: ModuleClass.External.key },
+	{ class: ModuleClass.Absolute.key },
+	{ class: ModuleClass.Relative.key },
 ];
 
 function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[]) {
@@ -69,10 +77,10 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 		}
 
 		if (isTypeImport) {
-			return importPath.startsWith(group.path) && group.types !== TypeImportConfiguration.Exclude;
+			return importPath.startsWith(group.path) && group.types !== TypeImport.Exclude.key;
 		}
 
-		return importPath.startsWith(group.path) && group.types !== TypeImportConfiguration.Only;
+		return importPath.startsWith(group.path) && group.types !== TypeImport.Only.key;
 	});
 
 	if (hardCodedIndex >= 0) {
@@ -88,7 +96,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 
 	let moduleClass = ModuleClass.External;
 
-	if (module.isBuiltin(moduleName)) {
+	if (isBuiltin(moduleName)) {
 		moduleClass = ModuleClass.Node;
 	} else if (/^(?:\/|\.)/u.exec(moduleName)) {
 		moduleClass = isAbsolute(moduleName) ? ModuleClass.Absolute : ModuleClass.Relative;
@@ -100,10 +108,10 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 		}
 
 		if (isTypeImport) {
-			return group.class === moduleClass && group.types !== TypeImportConfiguration.Exclude;
+			return group.class === moduleClass.key && group.types !== TypeImport.Exclude.key;
 		}
 
-		return group.class === moduleClass && group.types !== TypeImportConfiguration.Only;
+		return group.class === moduleClass.key && group.types !== TypeImport.Only.key;
 	});
 
 	return classIndex >= 0 ? classIndex : groups.length;
@@ -152,7 +160,7 @@ export const rule: RuleModule<GroupConfiguration[]> = {
 		schema: {
 			definitions: {
 				typeImportConfiguration: {
-					enum: ['include', 'exclude', 'only'],
+					enum: [...TypeImport.keys()],
 				},
 				moduleConfiguration: {
 					oneOf: [
@@ -161,7 +169,7 @@ export const rule: RuleModule<GroupConfiguration[]> = {
 							type: 'object',
 							properties: {
 								class: {
-									enum: ['node', 'external', 'absolute', 'relative'],
+									enum: [...ModuleClass.keys()],
 								},
 								types: {
 									$ref: '#/definitions/typeImportConfiguration',

@@ -1,12 +1,15 @@
+import { Enum } from '@shigen/enum';
 import Ajv from 'ajv';
 import { Linter } from 'eslint';
 
 import type { RuleModule } from './rule.js';
 
-export enum LintResult {
-	Valid = 'valid',
-	Invalid = 'invalid',
-	Fixed = 'fixed',
+const lintResultId = Symbol();
+
+export class LintResult extends Enum(lintResultId) {
+	static readonly Valid = new LintResult(lintResultId);
+	static readonly Invalid = new LintResult(lintResultId);
+	static readonly Fixed = new LintResult(lintResultId);
 }
 
 export interface LintReport {

@@ -1,4 +1,5 @@
 import type { Node } from 'estree';
+import { Enum } from '@shigen/enum';
 
 import type {
 	ExportModuleDeclaration,
@@ -13,25 +14,31 @@ import { exportModules, extrema, importModules, isTypeImportOrExport, linesBetwe
 import { fixRange } from '../tools/rule';
 import { sortByPath } from '../tools/sort';
 
-export enum TypeImportGroupPosition {
-	Ignore = 'ignore',
-	Top = 'top',
-	Bottom = 'bottom',
-	AboveValue = 'above-value',
-	BelowValue = 'below-value',
+export type GroupPositionOption = 'ignore' | 'top' | 'bottom' | 'above-value' | 'below-value';
+export type InlinePositionOption = 'ignore' | 'start' | 'end';
+
+const typeImportGroupPositionId = Symbol();
+const typeImportInlinePositionId = Symbol();
+
+export class TypeImportGroupPosition extends Enum<{ Key: GroupPositionOption }>(typeImportGroupPositionId) {
+	static readonly Ignore = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'ignore' });
+	static readonly Top = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'top' });
+	static readonly Bottom = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'bottom' });
+	static readonly AboveValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'above-value' });
+	static readonly BelowValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'below-value' });
 }
 
-export enum TypeImportInlinePosition {
-	Ignore = 'ignore',
-	Start = 'start',
-	End = 'End',
+export class TypeImportInlinePosition extends Enum<{ Key: InlinePositionOption }>(typeImportInlinePositionId) {
+	static readonly Ignore = new TypeImportInlinePosition(typeImportInlinePositionId, { key: 'ignore' });
+	static readonly Start = new TypeImportInlinePosition(typeImportInlinePositionId, { key: 'start' });
+	static readonly End = new TypeImportInlinePosition(typeImportInlinePositionId, { key: 'end' });
 }
 
 export interface Configuration extends SortOptions {
 	specifier: 'source' | 'rename';
 	sortExports: boolean;
-	typesInGroup: TypeImportGroupPosition;
-	inlineTypes: TypeImportInlinePosition;
+	typesInGroup: GroupPositionOption;
+	inlineTypes: InlinePositionOption;
 }
 
 const defaultConfiguration: Configuration = {
@@ -40,8 +47,8 @@ const defaultConfiguration: Configuration = {
 	numeric: true,
 	caseFirst: 'lower',
 	sortExports: true,
-	typesInGroup: TypeImportGroupPosition.Ignore,
-	inlineTypes: TypeImportInlinePosition.Ignore,
+	typesInGroup: TypeImportGroupPosition.Ignore.key,
+	inlineTypes: TypeImportInlinePosition.Ignore.key,
 };
 
 export const rule: RuleModule<[Partial<Configuration>?]> = {
@@ -79,7 +86,10 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 						type: 'boolean',
 					},
 					typesInGroup: {
-						enum: ['ignore', 'top', 'bottom', 'above-value', 'below-value'],
+						enum: [...TypeImportGroupPosition.keys()],
+					},
+					inlineTypes: {
+						enum: [...TypeImportInlinePosition.keys()],
 					},
 				},
 			},
@@ -103,7 +113,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 		const sortModules = (group: ModuleDeclaration[]) => {
 			const sorted = sortByPath(group, ['source', 'value'], configuration);
 
-			if (configuration.typesInGroup !== TypeImportGroupPosition.Ignore) {
+			if (configuration.typesInGroup !== TypeImportGroupPosition.Ignore.key) {
 				sorted.sort((a, b) => {
 					const aIsType = isTypeImportOrExport(a);
 					const bIsType = isTypeImportOrExport(b);
@@ -114,18 +124,18 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 
 					// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 					switch (configuration.typesInGroup) {
-						case TypeImportGroupPosition.Top:
+						case TypeImportGroupPosition.Top.key:
 							return aIsType ? -1 : 1;
-						case TypeImportGroupPosition.Bottom:
+						case TypeImportGroupPosition.Bottom.key:
 							return aIsType ? 1 : -1;
 					}
 
 					if (a.source.value === b.source.value) {
 						// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 						switch (configuration.typesInGroup) {
-							case TypeImportGroupPosition.AboveValue:
+							case TypeImportGroupPosition.AboveValue.key:
 								return aIsType ? -1 : 1;
-							case TypeImportGroupPosition.BelowValue:
+							case TypeImportGroupPosition.BelowValue.key:
 								return aIsType ? 1 : -1;
 						}
 					}
@@ -158,7 +168,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 				return sortByPath(specifiers as ExportSpecifier[], [from, 'name'], configuration);
 			})();
 
-			if (configuration.inlineTypes !== TypeImportInlinePosition.Ignore) {
+			if (configuration.inlineTypes !== TypeImportInlinePosition.Ignore.key) {
 				sorted.sort((a, b) => {
 					const aIsType = isTypeImportOrExport(a);
 					const bIsType = isTypeImportOrExport(b);
@@ -169,9 +179,9 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 
 					// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 					switch (configuration.inlineTypes) {
-						case TypeImportInlinePosition.Start:
+						case TypeImportInlinePosition.Start.key:
 							return aIsType ? -1 : 1;
-						case TypeImportInlinePosition.End:
+						case TypeImportInlinePosition.End.key:
 							return aIsType ? 1 : -1;
 					}
 

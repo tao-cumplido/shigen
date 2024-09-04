@@ -307,7 +307,7 @@ test.describe('rule: sort-imports', () => {
 					import 'bar';
 					import type bar from 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.Top }],
+				[{ typesInGroup: TypeImportGroupPosition.Top.key }],
 				tsParserConfig,
 			);
 
@@ -332,7 +332,7 @@ test.describe('rule: sort-imports', () => {
 					import type bar from 'bar';
 					import 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.Bottom }],
+				[{ typesInGroup: TypeImportGroupPosition.Bottom.key }],
 				tsParserConfig,
 			);
 
@@ -357,7 +357,7 @@ test.describe('rule: sort-imports', () => {
 					import type foo from 'foo';
 					import type bar from 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.AboveValue }],
+				[{ typesInGroup: TypeImportGroupPosition.AboveValue.key }],
 				tsParserConfig,
 			);
 
@@ -382,7 +382,7 @@ test.describe('rule: sort-imports', () => {
 					import 'foo';
 					import 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.BelowValue }],
+				[{ typesInGroup: TypeImportGroupPosition.BelowValue.key }],
 				tsParserConfig,
 			);
 
@@ -410,7 +410,7 @@ test.describe('rule: sort-imports', () => {
 		test('inline types start', () => {
 			const report = reporter.lint(
 				dedent`import { a, type b } from 'foo';`,
-				[{ inlineTypes: TypeImportInlinePosition.Start }],
+				[{ inlineTypes: TypeImportInlinePosition.Start.key }],
 				tsParserConfig,
 			);
 
@@ -422,7 +422,7 @@ test.describe('rule: sort-imports', () => {
 		test('inline types end', () => {
 			const report = reporter.lint(
 				dedent`import { type a, b } from 'foo';`,
-				[{ inlineTypes: TypeImportInlinePosition.End }],
+				[{ inlineTypes: TypeImportInlinePosition.End.key }],
 				tsParserConfig,
 			);
 
