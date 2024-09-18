@@ -1,5 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types';
-import type { SourceCode } from 'eslint';
+import type { AST, SourceCode } from 'eslint';
 import type estree from 'estree';
 
 export type ImportModuleDeclaration = estree.ImportDeclaration &
@@ -49,6 +49,22 @@ export function linesBetween(a: estree.Node | undefined, b: estree.Node | undefi
 	return b.loc.start.line - a.loc.end.line - 1;
 }
 
-export function onlyWhiteSpaceBetween(a: estree.Node, b: estree.Node, source: SourceCode): boolean {
-	return !source.getFirstTokenBetween(a, b, { includeComments: true });
+export function isComment(value: AST.Token | estree.Comment | estree.Node): value is estree.Comment {
+	return value.type === 'Block' || value.type === 'Line';
+}
+
+export function assertLoc(value: { loc?: AST.SourceLocation | null } | undefined): AST.SourceLocation {
+	if (value?.loc) {
+		return value.loc;
+	}
+
+	throw new Error(`error: AST was generated without node location information`);
+}
+
+export function assertRange(value: { range?: AST.Range | null } | undefined): AST.Range {
+	if (value?.range) {
+		return value.range;
+	}
+
+	throw new Error();
 }

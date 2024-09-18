@@ -83,6 +83,21 @@ test.describe('rule: group-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
+		test('comments in group', () => {
+			const report = reporter.lint(
+				dedent`
+					import 'fs';
+					//
+					import { /* a, */ b } from 'module';
+					 /* */
+					import 'path';
+				`,
+				[],
+			);
+
+			assert.equal(report.result, LintResult.Valid);
+		});
+
 		test('type imports', () => {
 			const report = reporter.lint(
 				dedent`
@@ -360,6 +375,54 @@ test.describe('rule: group-imports', () => {
 				import './bar';
 				import 'baz';
 			`,
+			);
+		});
+
+		test('comments in group', () => {
+			const report = reporter.lint(
+				dedent`
+					import 'fs';
+
+					 /* */
+					import { /* a, */ b } from 'module';
+
+
+					// a
+
+					import 'path';
+
+
+					// b
+
+					import 'foo';
+					 // c
+
+
+					// d
+					import './a';
+				`,
+				[],
+			);
+
+			assert.equal(report.result, LintResult.Fixed);
+			// assert.equal(report.errors.length, 0);
+			assert.equal(
+				report.code,
+				dedent`
+					import 'fs';
+					 /* */
+					import { /* a, */ b } from 'module';
+					// a
+					import 'path';
+
+					// b
+
+					import 'foo';
+					 // c
+
+					// d
+					import './a';
+				`,
 			);
 		});
 

@@ -1,11 +1,13 @@
 import { isBuiltin } from 'node:module';
 import { isAbsolute } from 'node:path';
 
+import type { AST, Rule } from 'eslint';
+import type { Comment, Node } from 'estree';
 import { Enum } from '@shigen/enum';
 
 import type { ImportModuleDeclaration } from '../tools/ast';
 import type { RuleContext, RuleModule } from '../tools/rule';
-import { extrema, importModules, isTypeImportOrExport, linesBetween, onlyWhiteSpaceBetween } from '../tools/ast';
+import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport } from '../tools/ast';
 import { fixRange } from '../tools/rule';
 import { sortByPath } from '../tools/sort';
 
@@ -121,27 +123,89 @@ function checkLines(
 	context: RuleContext<GroupConfiguration[]>,
 	previous: ImportModuleDeclaration | undefined,
 	next: ImportModuleDeclaration | undefined,
-	lineCount: number,
+	lineCount: 0 | 1,
 ) {
 	if (!previous || !next) {
 		throw new Error(`group-imports: unexpected undefined node`);
 	}
 
-	if (linesBetween(previous, next) === lineCount) {
-		return;
+	const tokensBetween = context.sourceCode.getTokensBetween(previous, next, { includeComments: true });
+	const relevantItems: (Comment | Node)[] = [previous];
+
+	for (const token of tokensBetween) {
+		if (!isComment(token)) {
+			return context.report({
+				loc: {
+					start: assertLoc(tokensBetween.find((t) => !isComment(t))).start,
+					end: assertLoc(tokensBetween.findLast((t) => !isComment(t))).end,
+				},
+				message: `Unexpected code between imports of group`,
+			});
+		}
+
+		relevantItems.push(token);
 	}
 
-	context.report({
-		node: previous,
-		message: `Expected ${lineCount} empty line${lineCount === 1 ? '' : 's'} after import`,
-		fix(fixer) {
-			if (!previous.range || !next.range || !onlyWhiteSpaceBetween(previous, next, context.getSourceCode())) {
-				return null;
-			}
+	relevantItems.push(next);
 
-			return fixer.replaceTextRange([previous.range[1], next.range[0]], ''.padEnd(lineCount + 1, '\n'));
-		},
-	});
+	for (let i = 0; i < relevantItems.length - 1; i++) {
+		const a = relevantItems[i]!;
+		const b = relevantItems[i + 1]!;
+
+		const locA = assertLoc(a);
+		const locB = assertLoc(b);
+
+		const rangeA = assertRange(a);
+		const rangeB = assertRange(b);
+
+		const linesBetween = locB.start.line - locA.end.line - 1;
+
+		if (lineCount === 0) {
+			if (linesBetween > 0) {
+				const range: AST.Range = [rangeA[1], rangeB[0] - locB.start.column];
+				context.report({
+					loc: {
+						start: locA.end,
+						end: {
+							line: locB.start.line,
+							column: 0,
+						},
+					},
+					message: `Unexpected white space between imports`,
+					fix: (fixer) => fixer.replaceTextRange(range, '\n'),
+				});
+			}
+		} else {
+			const columnOffset = isComment(b) ? 0 : locB.start.column;
+			const reportLoc = {
+				start: locA.end,
+				end: {
+					line: locB.start.line,
+					column: columnOffset,
+				},
+			};
+
+			const fix = (fixer: Rule.RuleFixer) => fixer.replaceTextRange([rangeA[1], rangeB[0] - columnOffset], '\n\n');
+
+			if (isComment(a) || isComment(b)) {
+				if (linesBetween > 1) {
+					context.report({
+						loc: reportLoc,
+						message: `TODO 1`,
+						fix,
+					});
+				}
+			} else {
+				if (linesBetween !== 1) {
+					context.report({
+						loc: reportLoc,
+						message: `TODO 2`,
+						fix,
+					});
+				}
+			}
+		}
+	}
 }
 
 function groupLabels(groups: GroupConfiguration[]) {
