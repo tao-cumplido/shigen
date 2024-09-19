@@ -7,12 +7,12 @@ import type {
 	ImportModuleDeclaration,
 	ImportSpecifier,
 	ModuleDeclaration,
-} from '../tools/ast';
-import type { RuleModule } from '../tools/rule';
-import type { SortOptions } from '../tools/sort';
-import { exportModules, extrema, importModules, isTypeImportOrExport, linesBetween } from '../tools/ast';
-import { fixRange } from '../tools/rule';
-import { sortByPath } from '../tools/sort';
+} from '../tools/ast.js';
+import type { RuleModule } from '../tools/rule.js';
+import type { SortOptions } from '../tools/sort.js';
+import { exportModules, extrema, importModules, isTypeImportOrExport, linesBetween } from '../tools/ast.js';
+import { fixRange } from '../tools/rule.js';
+import { sortByPath } from '../tools/sort.js';
 
 export type GroupPositionOption = 'ignore' | 'top' | 'bottom' | 'above-value' | 'below-value';
 export type InlinePositionOption = 'ignore' | 'start' | 'end';

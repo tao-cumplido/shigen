@@ -1,5 +1,5 @@
 import { Enum } from '@shigen/enum';
-import Ajv from 'ajv';
+import { Ajv } from 'ajv';
 import { Linter } from 'eslint';
 
 import type { RuleModule } from './rule.js';

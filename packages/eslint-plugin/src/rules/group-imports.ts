@@ -5,11 +5,11 @@ import type { AST, Rule } from 'eslint';
 import type { Comment, Node } from 'estree';
 import { Enum } from '@shigen/enum';
 
-import type { ImportModuleDeclaration } from '../tools/ast';
-import type { RuleContext, RuleModule } from '../tools/rule';
-import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport } from '../tools/ast';
-import { fixRange } from '../tools/rule';
-import { sortByPath } from '../tools/sort';
+import type { ImportModuleDeclaration } from '../tools/ast.js';
+import type { RuleContext, RuleModule } from '../tools/rule.js';
+import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport } from '../tools/ast.js';
+import { fixRange } from '../tools/rule.js';
+import { sortByPath } from '../tools/sort.js';
 
 export type ModuleClassOption = 'node' | 'external' | 'absolute' | 'relative';
 export type TypeImportOption = 'include' | 'exclude' | 'only';

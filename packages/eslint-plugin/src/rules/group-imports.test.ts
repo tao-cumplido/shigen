@@ -4,8 +4,8 @@ import test from 'node:test';
 import tseslint from 'typescript-eslint';
 import dedent from 'dedent';
 
-import { LintReporter, LintResult } from '../tools/test';
-import { rule, ModuleClass, TypeImport } from './group-imports';
+import { LintReporter, LintResult } from '../tools/test.js';
+import { rule, ModuleClass, TypeImport } from './group-imports.js';
 
 test.describe('rule: group-imports', () => {
 	const reporter = new LintReporter(rule);
