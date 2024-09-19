@@ -25,10 +25,7 @@ export function exportModules(source: SourceCode): ExportModuleDeclaration[] {
 }
 
 export function isTypeImportOrExport(node: ModuleDeclaration | ImportSpecifier | ExportSpecifier): boolean {
-	return (
-		(Reflect.has(node, 'importKind') && node.importKind === 'type') ||
-		(Reflect.has(node, 'exportKind') && node.exportKind === 'type')
-	);
+	return ('importKind' in node && node.importKind === 'type') || ('exportKind' in node && node.exportKind === 'type');
 }
 
 export function extrema<T extends estree.Node>(source: readonly T[]): [T, T] {

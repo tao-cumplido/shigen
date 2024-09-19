@@ -74,7 +74,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 			return importPath.startsWith(group);
 		}
 
-		if (!Reflect.has(group, 'path')) {
+		if (!('path' in group)) {
 			return false;
 		}
 
@@ -105,7 +105,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 	}
 
 	const classIndex = findIndex((group) => {
-		if (typeof group !== 'object' || !Reflect.has(group, 'class')) {
+		if (typeof group !== 'object' || !('class' in group)) {
 			return false;
 		}
 
@@ -210,7 +210,7 @@ function checkLines(
 
 function groupLabels(groups: GroupConfiguration[]) {
 	return groups.map((group) => {
-		if (group instanceof Array || typeof group === 'string' || Reflect.has(group, 'path')) {
+		if (group instanceof Array || typeof group === 'string' || 'path' in group) {
 			return 'custom';
 		}
 
