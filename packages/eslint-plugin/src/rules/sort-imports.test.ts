@@ -430,5 +430,28 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.errors.length, 1);
 			assert.equal(report.code, dedent`import { b, type a } from 'foo';`);
 		});
+
+		test('preserve line breaks', () => {
+			const report = reporter.lint(
+				dedent`
+					import {
+						b,
+						a,
+					} from 'foo';
+				`,
+				[],
+			);
+
+			assert.equal(report.result, LintResult.Fixed);
+			assert.equal(
+				report.code,
+				dedent`
+					import {
+						a,
+						b,
+					} from 'foo';
+				`,
+			);
+		});
 	});
 });

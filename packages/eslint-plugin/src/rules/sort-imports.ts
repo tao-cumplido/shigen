@@ -153,6 +153,15 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 			}
 		};
 
+		const specifiersText = (nodes: readonly (ImportSpecifier | ExportSpecifier)[]): string => {
+			if (nodes[0]?.loc?.start.line !== nodes[1]?.loc?.start.line) {
+				const indent = source.lines[nodes[0]!.loc!.start.line - 1]?.match(/^\s+/g)?.[0] ?? '';
+				return nodes.map((node, index) => `${index > 0 ? indent : ''}${source.getText(node)}`).join(',\n');
+			}
+
+			return nodes.map((node) => source.getText(node)).join(', ');
+		};
+
 		const sortSpecifiers = <T extends ImportSpecifier | ExportSpecifier>(specifiers: T[]) => {
 			if (!specifiers.length) {
 				return;
@@ -193,7 +202,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 				fixRange(context, {
 					range: extrema(specifiers),
 					message: 'Expected specifiers to be sorted',
-					code: sorted.map((node) => source.getText(node)).join(', '),
+					code: specifiersText(sorted),
 				});
 			}
 		};
@@ -216,7 +225,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 					fixRange(context, {
 						range: extrema(specifiers),
 						message: 'Expected specifiers to be sorted',
-						code: sorted.map((node) => source.getText(node)).join(', '),
+						code: specifiersText(sorted),
 					});
 				}
 			};
