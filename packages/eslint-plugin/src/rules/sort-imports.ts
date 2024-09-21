@@ -217,24 +217,11 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 			});
 
 		if (configuration.sortExports) {
-			const sortExportSpecifiers = (specifiers: ExportSpecifier[]) => {
-				const from: 'exported' | 'local' = configuration.specifier === 'source' ? 'local' : 'exported';
-				const sorted = sortByPath(specifiers, [from, 'name'], configuration);
-
-				if (sorted.some((node, i) => node !== specifiers[i])) {
-					fixRange(context, {
-						range: extrema(specifiers),
-						message: 'Expected specifiers to be sorted',
-						code: specifiersText(sorted),
-					});
-				}
-			};
-
 			exportModules(source)
 				.reduce<ExportModuleDeclaration[][]>(partition, [[]])
 				.forEach((group) => {
 					sortModules(group);
-					group.forEach((node) => sortExportSpecifiers(node.specifiers ?? []));
+					group.forEach((node) => sortSpecifiers(node.specifiers ?? []));
 				});
 		}
 

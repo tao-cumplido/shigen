@@ -409,14 +409,25 @@ test.describe('rule: sort-imports', () => {
 
 		test('inline types start', () => {
 			const report = reporter.lint(
-				dedent`import { a, type b } from 'foo';`,
+				dedent`
+					import { a, type b } from 'foo';
+
+					export { a, type b } from 'bar';
+				`,
 				[{ inlineTypes: TypeImportInlinePosition.Start.key }],
 				tsParserConfig,
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
-			assert.equal(report.errors.length, 1);
-			assert.equal(report.code, dedent`import { type b, a } from 'foo';`);
+			assert.equal(report.errors.length, 2);
+			assert.equal(
+				report.code,
+				dedent`
+					import { type b, a } from 'foo';
+
+					export { type b, a } from 'bar';
+				`,
+			);
 		});
 
 		test('inline types end', () => {
