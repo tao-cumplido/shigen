@@ -20,7 +20,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import type { PackageJson } from 'type-fest';
-import { createFixture, jsonData, textData };
+import { createFixture, jsonData, textData } from '@shigen/test/fs';
 
 test('fs fixture', async () => {
 	// supports the explicit resource management proposal
@@ -62,7 +62,7 @@ Semantic wrapper for `Buffer.from`. Useful for populating a `DataTree` input alo
 Create UTF-8 encoded JSON data from input. The `Jsonifiable` type is imported from [`type-fest`](https://www.npmjs.com/package/type-fest#json) and matches all valid JSON data types or objects with a `toJSON` method. `type-fest` provides other useful types like `PackageJson` or `TsConfigJson` that can be used explicitly as type argument to provide auto-completion and validation for known properties.
 
 #### `createFixture(source: string | DataTree): Promise<Fixture>`
-Create fixture at a randomely unique path inside the OS's default temporary directory. The fixture can be populated in multiple ways:
+Create fixture at a randomly unique path inside the OS's default temporary directory. The fixture can be populated in multiple ways:
 
 - Passing a path to a template directory will copy the templates contents recursively into the fixture's directory.
 - Passing a `DataTree` object with the defined directory structure and file contents.
