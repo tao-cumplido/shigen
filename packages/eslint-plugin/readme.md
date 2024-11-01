@@ -61,7 +61,7 @@ If it's an object, `path` can be a path and `class` can be one of the following:
 - `relative`: All relative imports.
 - `absolute`: All absolute imports, never seen a project use these, but it's possible.
 
-Paths are matched from the start of the actual import path. This makes it possible for subpaths of the same module or scope to be in different groups.
+Path patterns are matched with the [`minimatch`](https://github.com/isaacs/minimatch) library.
 The property `types` is only relevant for TypeScript's type imports and defaults to `'include'`.
 If you want type and value imports to be in separate groups you need to explicitly declare them with `'only'` and `'exclude'`.
 

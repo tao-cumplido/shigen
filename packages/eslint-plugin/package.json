@@ -60,7 +60,8 @@
 		"node": "^18.18.0 || >=20.9.0"
 	},
 	"dependencies": {
-		"@shigen/enum": "0.5.0"
+		"@shigen/enum": "~0.5.0",
+		"minimatch": "^10.0.1"
 	},
 	"devDependencies": {
 		"@types/eslint": "9.6.1",

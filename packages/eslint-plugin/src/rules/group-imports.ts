@@ -4,6 +4,7 @@ import { isAbsolute } from 'node:path';
 import type { AST, Rule } from 'eslint';
 import type { Comment, Node } from 'estree';
 import { Enum } from '@shigen/enum';
+import { minimatch } from 'minimatch';
 
 import type { ImportModuleDeclaration } from '../tools/ast.js';
 import type { RuleContext, RuleModule } from '../tools/rule.js';
@@ -71,7 +72,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 
 	const hardCodedIndex = findIndex((group) => {
 		if (typeof group === 'string') {
-			return importPath.startsWith(group);
+			return minimatch(importPath, group);
 		}
 
 		if (!('path' in group)) {
@@ -79,10 +80,10 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 		}
 
 		if (isTypeImport) {
-			return importPath.startsWith(group.path) && group.types !== TypeImport.Exclude.key;
+			return minimatch(importPath, group.path) && group.types !== TypeImport.Exclude.key;
 		}
 
-		return importPath.startsWith(group.path) && group.types !== TypeImport.Only.key;
+		return minimatch(importPath, group.path) && group.types !== TypeImport.Only.key;
 	});
 
 	if (hardCodedIndex >= 0) {
@@ -210,7 +211,7 @@ function checkLines(
 
 function groupLabels(groups: GroupConfiguration[]) {
 	return groups.map((group) => {
-		if (group instanceof Array || typeof group === 'string' || 'path' in group) {
+		if (group instanceof Array || typeof group === 'string' || 'path' in group || 'pattern' in group) {
 			return 'custom';
 		}
 

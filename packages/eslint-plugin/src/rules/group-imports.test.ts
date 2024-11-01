@@ -356,7 +356,7 @@ test.describe('rule: group-imports', () => {
 					import 'baz';
 					import 'foo/d';
 				`,
-				[[{ class: ModuleClass.Node.key }, { class: ModuleClass.Absolute.key }], 'foo'],
+				[[{ class: ModuleClass.Node.key }, { class: ModuleClass.Absolute.key }], 'foo/*'],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -529,7 +529,7 @@ test.describe('rule: group-imports', () => {
 					import 'a/b/c';
 					import 'a/a/b';
 				`,
-				['a/a', 'a/b'],
+				['a/a/*', 'a/b/*'],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
