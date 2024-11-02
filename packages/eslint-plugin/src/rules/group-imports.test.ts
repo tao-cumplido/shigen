@@ -537,11 +537,31 @@ test.describe('rule: group-imports', () => {
 			assert.equal(
 				report.code,
 				dedent`
-				import 'a/a/a';
-				import 'a/a/b';
+					import 'a/a/a';
+					import 'a/a/b';
 
-				import 'a/b/c';
-			`,
+					import 'a/b/c';
+				`,
+			);
+		});
+
+		test("minimatch matchBase option", () => {
+			const report = reporter.lint(
+				dedent`
+					import './a';
+					import './b.css';
+				`,
+				['*.css', { class: 'relative' }],
+			);
+
+			assert.equal(report.result, LintResult.Fixed);
+			assert.equal(
+				report.code,
+				dedent`
+					import './b.css';
+
+					import './a';
+				`,
 			);
 		});
 	});

@@ -72,7 +72,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 
 	const hardCodedIndex = findIndex((group) => {
 		if (typeof group === 'string') {
-			return minimatch(importPath, group);
+			return minimatch(importPath, group, { matchBase: true });
 		}
 
 		if (!('path' in group)) {
@@ -80,10 +80,10 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 		}
 
 		if (isTypeImport) {
-			return minimatch(importPath, group.path) && group.types !== TypeImport.Exclude.key;
+			return minimatch(importPath, group.path, { matchBase: true }) && group.types !== TypeImport.Exclude.key;
 		}
 
-		return minimatch(importPath, group.path) && group.types !== TypeImport.Only.key;
+		return minimatch(importPath, group.path, { matchBase: true }) && group.types !== TypeImport.Only.key;
 	});
 
 	if (hardCodedIndex >= 0) {

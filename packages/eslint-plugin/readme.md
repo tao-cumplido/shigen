@@ -53,15 +53,15 @@ type ModuleConfiguration = string | ModulePathConfiguration | ModuleClassConfigu
 type Configuration = Array<ModuleConfiguration | ModuleConfiguration[]>;
 ```
 
-where `ModuleConfiguration` can be a path or an object.  
-If it's an object, `path` can be a path and `class` can be one of the following:
+where `ModuleConfiguration` can be a path pattern or an object.  
+If it's an object, `path` can be a path pattern and `class` can be one of the following:
 
 - `node`: All node builtin packages like `fs` and `path`, with or without the `node:` protocol prefix.
 - `external`: All other declared dependencies, e.g. `lodash`, `react`, etc.
 - `relative`: All relative imports.
 - `absolute`: All absolute imports, never seen a project use these, but it's possible.
 
-Path patterns are matched with the [`minimatch`](https://github.com/isaacs/minimatch) library.
+Path patterns are matched with the [`minimatch`](https://github.com/isaacs/minimatch) library with the [`matchBase` option](https://github.com/isaacs/minimatch?tab=readme-ov-file#matchbase) set.
 The property `types` is only relevant for TypeScript's type imports and defaults to `'include'`.
 If you want type and value imports to be in separate groups you need to explicitly declare them with `'only'` and `'exclude'`.
 
