@@ -33,6 +33,8 @@ test.describe('rule: group-imports', () => {
 
 					import '/';
 
+					import '#foo';
+
 					import '../foo';
 					import './bar';
 				`,

@@ -12,7 +12,7 @@ import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImport
 import { fixRange } from '../tools/rule.js';
 import { sortByPath } from '../tools/sort.js';
 
-export type ModuleClassOption = 'node' | 'external' | 'absolute' | 'relative';
+export type ModuleClassOption = 'node' | 'external' | 'internal' | 'absolute' | 'relative';
 export type TypeImportOption = 'include' | 'exclude' | 'only';
 
 const moduleClassId = Symbol();
@@ -21,6 +21,7 @@ const typeImportId = Symbol();
 export class ModuleClass extends Enum<{ Key: ModuleClassOption }>(moduleClassId) {
 	static readonly Node = new ModuleClass(moduleClassId, { key: 'node' });
 	static readonly External = new ModuleClass(moduleClassId, { key: 'external' });
+	static readonly Internal = new ModuleClass(moduleClassId, { key: 'internal' });
 	static readonly Absolute = new ModuleClass(moduleClassId, { key: 'absolute' });
 	static readonly Relative = new ModuleClass(moduleClassId, { key: 'relative' });
 }
@@ -49,6 +50,7 @@ const defaultConfiguration: GroupConfiguration[] = [
 	{ class: ModuleClass.Node.key },
 	{ class: ModuleClass.External.key },
 	{ class: ModuleClass.Absolute.key },
+	{ class: ModuleClass.Internal.key },
 	{ class: ModuleClass.Relative.key },
 ];
 
@@ -101,6 +103,8 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 
 	if (isBuiltin(moduleName)) {
 		moduleClass = ModuleClass.Node;
+	} else if (moduleName.startsWith("#")) {
+		moduleClass = ModuleClass.Internal;
 	} else if (/^(?:\/|\.)/u.exec(moduleName)) {
 		moduleClass = isAbsolute(moduleName) ? ModuleClass.Absolute : ModuleClass.Relative;
 	}
