@@ -11,22 +11,22 @@
 	"scripts": {
 		"build": "pnpm run --recursive build",
 		"test": "pnpm run --recursive test",
-		"lint": "eslint '**/*.{js,ts}'",
-		"format": "prettier --write '**/*.{js,ts,json,md}'"
+		"lint": "eslint '**/*.{js,ts}'"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "0.13.3",
-		"@shigen/eslint-plugin": "0.3.1",
-		"@types/node": "20.7.1",
-		"@typescript-eslint/eslint-plugin": "6.7.3",
-		"@typescript-eslint/parser": "6.7.3",
-		"eslint": "8.50.0",
-		"expect-type": "0.17.3",
-		"fast-glob": "3.3.1",
-		"prettier": "3.0.3",
-		"ts-dualist": "0.1.0-beta.1",
-		"tsx": "4.7.3",
-		"typescript": "5.2.2",
-		"wireit": "0.14.0"
+		"@arethetypeswrong/cli": "0.18.2",
+		"@shigen/eslint-plugin": "0.13.0",
+		"@stylistic/eslint-plugin": "5.1.0",
+		"@types/node": "24.0.7",
+		"eslint": "9.30.0",
+		"eslint-plugin-unused-imports": "4.1.4",
+		"eslint-typegen": "2.2.0",
+		"expect-type": "1.2.1",
+		"fast-glob": "3.3.3",
+		"ts-dualist": "0.2.0-beta.1",
+		"tsx": "4.20.3",
+		"typescript": "5.8.3",
+		"typescript-eslint": "8.35.0",
+		"wireit": "0.14.12"
 	}
 }

@@ -10,9 +10,5 @@
 		"editor.codeActionsOnSave": {
 			"source.fixAll.eslint": "explicit"
 		}
-	},
-	"[javascript][typescript][json][jsonc]": {
-		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	}
 }

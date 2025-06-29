@@ -1,35 +1,35 @@
-import { isBuiltin } from 'node:module';
-import { isAbsolute } from 'node:path';
+import { isBuiltin } from "node:module";
+import { isAbsolute } from "node:path";
 
-import type { AST, Rule } from 'eslint';
-import type { Comment, Node } from 'estree';
-import { Enum } from '@shigen/enum';
-import { minimatch } from 'minimatch';
+import type { AST, Rule } from "eslint";
+import type { Comment, Node } from "estree";
+import { Enum } from "@shigen/enum";
+import { minimatch } from "minimatch";
 
-import type { ImportModuleDeclaration } from '../tools/ast.js';
-import type { RuleContext, RuleModule } from '../tools/rule.js';
-import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport } from '../tools/ast.js';
-import { fixRange } from '../tools/rule.js';
-import { sortByPath } from '../tools/sort.js';
+import type { ImportModuleDeclaration } from "../tools/ast.js";
+import type { RuleContext, RuleModule } from "../tools/rule.js";
+import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport } from "../tools/ast.js";
+import { fixRange } from "../tools/rule.js";
+import { sortByPath } from "../tools/sort.js";
 
-export type ModuleClassOption = 'node' | 'external' | 'internal' | 'absolute' | 'relative';
-export type TypeImportOption = 'include' | 'exclude' | 'only';
+export type ModuleClassOption = "node" | "external" | "internal" | "absolute" | "relative";
+export type TypeImportOption = "include" | "exclude" | "only";
 
 const moduleClassId = Symbol();
 const typeImportId = Symbol();
 
-export class ModuleClass extends Enum<{ Key: ModuleClassOption }>(moduleClassId) {
-	static readonly Node = new ModuleClass(moduleClassId, { key: 'node' });
-	static readonly External = new ModuleClass(moduleClassId, { key: 'external' });
-	static readonly Internal = new ModuleClass(moduleClassId, { key: 'internal' });
-	static readonly Absolute = new ModuleClass(moduleClassId, { key: 'absolute' });
-	static readonly Relative = new ModuleClass(moduleClassId, { key: 'relative' });
+export class ModuleClass extends Enum<{ Key: ModuleClassOption; }>(moduleClassId) {
+	static readonly Node = new ModuleClass(moduleClassId, { key: "node", });
+	static readonly External = new ModuleClass(moduleClassId, { key: "external", });
+	static readonly Internal = new ModuleClass(moduleClassId, { key: "internal", });
+	static readonly Absolute = new ModuleClass(moduleClassId, { key: "absolute", });
+	static readonly Relative = new ModuleClass(moduleClassId, { key: "relative", });
 }
 
-export class TypeImport extends Enum<{ Key: TypeImportOption }>(typeImportId) {
-	static readonly Include = new TypeImport(typeImportId, { key: 'include' });
-	static readonly Exclude = new TypeImport(typeImportId, { key: 'exclude' });
-	static readonly Only = new TypeImport(typeImportId, { key: 'only' });
+export class TypeImport extends Enum<{ Key: TypeImportOption; }>(typeImportId) {
+	static readonly Include = new TypeImport(typeImportId, { key: "include", });
+	static readonly Exclude = new TypeImport(typeImportId, { key: "exclude", });
+	static readonly Only = new TypeImport(typeImportId, { key: "only", });
 }
 
 interface ModuleClassConfiguration {
@@ -47,15 +47,15 @@ type ModuleConfiguration = string | ModulePathConfiguration | ModuleClassConfigu
 export type GroupConfiguration = ModuleConfiguration | ModuleConfiguration[];
 
 const defaultConfiguration: GroupConfiguration[] = [
-	{ class: ModuleClass.Node.key },
-	{ class: ModuleClass.External.key },
-	{ class: ModuleClass.Absolute.key },
-	{ class: ModuleClass.Internal.key },
-	{ class: ModuleClass.Relative.key },
+	{ class: ModuleClass.Node.key, },
+	{ class: ModuleClass.External.key, },
+	{ class: ModuleClass.Absolute.key, },
+	{ class: ModuleClass.Internal.key, },
+	{ class: ModuleClass.Relative.key, },
 ];
 
 function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[]) {
-	if (typeof node.source.value !== 'string') {
+	if (typeof node.source.value !== "string") {
 		return groups.length;
 	}
 
@@ -73,19 +73,19 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 	const isTypeImport = isTypeImportOrExport(node);
 
 	const hardCodedIndex = findIndex((group) => {
-		if (typeof group === 'string') {
-			return minimatch(importPath, group, { matchBase: true });
+		if (typeof group === "string") {
+			return minimatch(importPath, group, { matchBase: true, });
 		}
 
-		if (!('path' in group)) {
+		if (!("path" in group)) {
 			return false;
 		}
 
 		if (isTypeImport) {
-			return minimatch(importPath, group.path, { matchBase: true }) && group.types !== TypeImport.Exclude.key;
+			return minimatch(importPath, group.path, { matchBase: true, }) && group.types !== TypeImport.Exclude.key;
 		}
 
-		return minimatch(importPath, group.path, { matchBase: true }) && group.types !== TypeImport.Only.key;
+		return minimatch(importPath, group.path, { matchBase: true, }) && group.types !== TypeImport.Only.key;
 	});
 
 	if (hardCodedIndex >= 0) {
@@ -93,7 +93,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 	}
 
 	// split path at / delimiter but keep first / for absolute paths
-	const [moduleName] = importPath.split(/(?=^\/)|\//u);
+	const [ moduleName, ] = importPath.split(/(?=^\/)|\//u);
 
 	if (!moduleName) {
 		throw new Error(`group-imports: unexpected undefined module name for path '${importPath}'`);
@@ -110,7 +110,7 @@ function groupIndex(node: ImportModuleDeclaration, groups: GroupConfiguration[])
 	}
 
 	const classIndex = findIndex((group) => {
-		if (typeof group !== 'object' || !('class' in group)) {
+		if (typeof group !== "object" || !("class" in group)) {
 			return false;
 		}
 
@@ -134,8 +134,8 @@ function checkLines(
 		throw new Error(`group-imports: unexpected undefined node`);
 	}
 
-	const tokensBetween = context.sourceCode.getTokensBetween(previous, next, { includeComments: true });
-	const relevantItems: (Comment | Node)[] = [previous];
+	const tokensBetween = context.sourceCode.getTokensBetween(previous, next, { includeComments: true, });
+	const relevantItems: (Comment | Node)[] = [ previous, ];
 
 	for (const token of tokensBetween) {
 		if (!isComment(token)) {
@@ -167,7 +167,7 @@ function checkLines(
 
 		if (lineCount === 0) {
 			if (linesBetween > 0) {
-				const range: AST.Range = [rangeA[1], rangeB[0] - locB.start.column];
+				const range: AST.Range = [ rangeA[1], rangeB[0] - locB.start.column, ];
 				context.report({
 					loc: {
 						start: locA.end,
@@ -177,7 +177,7 @@ function checkLines(
 						},
 					},
 					message: `Unexpected white space between imports`,
-					fix: (fixer) => fixer.replaceTextRange(range, '\n'),
+					fix: (fixer) => fixer.replaceTextRange(range, "\n"),
 				});
 			}
 		} else {
@@ -190,7 +190,7 @@ function checkLines(
 				},
 			};
 
-			const fix = (fixer: Rule.RuleFixer) => fixer.replaceTextRange([rangeA[1], rangeB[0] - columnOffset], '\n\n');
+			const fix = (fixer: Rule.RuleFixer) => fixer.replaceTextRange([ rangeA[1], rangeB[0] - columnOffset, ], "\n\n");
 
 			if (isComment(a) || isComment(b)) {
 				if (linesBetween > 1) {
@@ -215,8 +215,8 @@ function checkLines(
 
 function groupLabels(groups: GroupConfiguration[]) {
 	return groups.map((group) => {
-		if (group instanceof Array || typeof group === 'string' || 'path' in group || 'pattern' in group) {
-			return 'custom';
+		if (group instanceof Array || typeof group === "string" || "path" in group || "pattern" in group) {
+			return "custom";
 		}
 
 		return group.class.toUpperCase();
@@ -225,54 +225,54 @@ function groupLabels(groups: GroupConfiguration[]) {
 
 export const rule: RuleModule<GroupConfiguration[]> = {
 	meta: {
-		fixable: 'code',
+		fixable: "code",
 		schema: {
 			definitions: {
 				typeImportConfiguration: {
-					enum: [...TypeImport.keys()],
+					enum: [ ...TypeImport.keys(), ],
 				},
 				moduleConfiguration: {
 					oneOf: [
-						{ type: 'string' },
+						{ type: "string", },
 						{
-							type: 'object',
+							type: "object",
 							properties: {
 								class: {
-									enum: [...ModuleClass.keys()],
+									enum: [ ...ModuleClass.keys(), ],
 								},
 								types: {
-									$ref: '#/definitions/typeImportConfiguration',
+									$ref: "#/definitions/typeImportConfiguration",
 								},
 							},
-							required: ['class'],
+							required: [ "class", ],
 							additionalProperties: false,
 						},
 						{
-							type: 'object',
+							type: "object",
 							properties: {
 								path: {
-									type: 'string',
+									type: "string",
 								},
 								types: {
-									$ref: '#/definitions/typeImportConfiguration',
+									$ref: "#/definitions/typeImportConfiguration",
 								},
 							},
-							required: ['path'],
+							required: [ "path", ],
 							additionalProperties: false,
 						},
 					],
 				},
 			},
-			type: 'array',
+			type: "array",
 			items: {
 				anyOf: [
 					{
-						$ref: '#/definitions/moduleConfiguration',
+						$ref: "#/definitions/moduleConfiguration",
 					},
 					{
-						type: 'array',
+						type: "array",
 						items: {
-							$ref: '#/definitions/moduleConfiguration',
+							$ref: "#/definitions/moduleConfiguration",
 						},
 					},
 				],
@@ -295,7 +295,7 @@ export const rule: RuleModule<GroupConfiguration[]> = {
 			return {};
 		}
 
-		const sorted = sortByPath(imports, ['index']);
+		const sorted = sortByPath(imports, [ "index", ]);
 
 		let previousIndex = sorted[0]?.index;
 
@@ -306,21 +306,21 @@ export const rule: RuleModule<GroupConfiguration[]> = {
 				if (current && previousIndex === value.index) {
 					current.push(value.node);
 				} else {
-					result.push([value.node]);
+					result.push([ value.node, ]);
 				}
 
 				previousIndex = value.index;
 
 				return result;
 			},
-			[[]],
+			[ [], ],
 		);
 
 		if (sorted.some((node, i) => node !== imports[i])) {
 			fixRange(context, {
-				range: extrema(imports.map(({ node }) => node)),
-				message: `Expected import groups: ${groupLabels(groupConfigurations).join(', ')}`,
-				code: groups.map((nodes) => nodes.map((node) => source.getText(node)).join('\n')).join('\n\n'),
+				range: extrema(imports.map(({ node, }) => node)),
+				message: `Expected import groups: ${groupLabels(groupConfigurations).join(", ")}`,
+				code: groups.map((nodes) => nodes.map((node) => source.getText(node)).join("\n")).join("\n\n"),
 			});
 		} else {
 			groups.forEach((group, i) => {
@@ -335,7 +335,7 @@ export const rule: RuleModule<GroupConfiguration[]> = {
 				}
 
 				const previous = groups[i - 1]?.at(-1);
-				const [current] = group;
+				const [ current, ] = group;
 				checkLines(context, previous, current, 1);
 			});
 		}

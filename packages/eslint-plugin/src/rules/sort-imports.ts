@@ -1,5 +1,5 @@
-import type { Node } from 'estree';
-import { Enum } from '@shigen/enum';
+import type { Node } from "estree";
+import { Enum } from "@shigen/enum";
 
 import type {
 	ExportModuleDeclaration,
@@ -7,45 +7,45 @@ import type {
 	ImportModuleDeclaration,
 	ImportSpecifier,
 	ModuleDeclaration,
-} from '../tools/ast.js';
-import type { RuleModule } from '../tools/rule.js';
-import type { SortOptions } from '../tools/sort.js';
-import { exportModules, extrema, importModules, isTypeImportOrExport, linesBetween } from '../tools/ast.js';
-import { fixRange } from '../tools/rule.js';
-import { sortByPath } from '../tools/sort.js';
+} from "../tools/ast.js";
+import type { RuleModule } from "../tools/rule.js";
+import type { SortOptions } from "../tools/sort.js";
+import { exportModules, extrema, importModules, isTypeImportOrExport, linesBetween } from "../tools/ast.js";
+import { fixRange } from "../tools/rule.js";
+import { sortByPath } from "../tools/sort.js";
 
-export type GroupPositionOption = 'ignore' | 'top' | 'bottom' | 'above-value' | 'below-value';
-export type InlinePositionOption = 'ignore' | 'start' | 'end';
+export type GroupPositionOption = "ignore" | "top" | "bottom" | "above-value" | "below-value";
+export type InlinePositionOption = "ignore" | "start" | "end";
 
 const typeImportGroupPositionId = Symbol();
 const typeImportInlinePositionId = Symbol();
 
-export class TypeImportGroupPosition extends Enum<{ Key: GroupPositionOption }>(typeImportGroupPositionId) {
-	static readonly Ignore = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'ignore' });
-	static readonly Top = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'top' });
-	static readonly Bottom = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'bottom' });
-	static readonly AboveValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'above-value' });
-	static readonly BelowValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: 'below-value' });
+export class TypeImportGroupPosition extends Enum<{ Key: GroupPositionOption; }>(typeImportGroupPositionId) {
+	static readonly Ignore = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "ignore", });
+	static readonly Top = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "top", });
+	static readonly Bottom = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "bottom", });
+	static readonly AboveValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "above-value", });
+	static readonly BelowValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "below-value", });
 }
 
-export class TypeImportInlinePosition extends Enum<{ Key: InlinePositionOption }>(typeImportInlinePositionId) {
-	static readonly Ignore = new TypeImportInlinePosition(typeImportInlinePositionId, { key: 'ignore' });
-	static readonly Start = new TypeImportInlinePosition(typeImportInlinePositionId, { key: 'start' });
-	static readonly End = new TypeImportInlinePosition(typeImportInlinePositionId, { key: 'end' });
+export class TypeImportInlinePosition extends Enum<{ Key: InlinePositionOption; }>(typeImportInlinePositionId) {
+	static readonly Ignore = new TypeImportInlinePosition(typeImportInlinePositionId, { key: "ignore", });
+	static readonly Start = new TypeImportInlinePosition(typeImportInlinePositionId, { key: "start", });
+	static readonly End = new TypeImportInlinePosition(typeImportInlinePositionId, { key: "end", });
 }
 
 export interface Configuration extends SortOptions {
-	specifier: 'source' | 'rename';
+	specifier: "source" | "rename";
 	sortExports: boolean;
 	typesInGroup: GroupPositionOption;
 	inlineTypes: InlinePositionOption;
 }
 
 const defaultConfiguration: Configuration = {
-	specifier: 'source',
-	locales: ['en-US'],
+	specifier: "source",
+	locales: [ "en-US", ],
 	numeric: true,
-	caseFirst: 'lower',
+	caseFirst: "lower",
 	sortExports: true,
 	typesInGroup: TypeImportGroupPosition.Ignore.key,
 	inlineTypes: TypeImportInlinePosition.Ignore.key,
@@ -53,50 +53,50 @@ const defaultConfiguration: Configuration = {
 
 export const rule: RuleModule<[Partial<Configuration>?]> = {
 	meta: {
-		fixable: 'code',
+		fixable: "code",
 		schema: [
 			{
-				type: 'object',
+				type: "object",
 				properties: {
 					locales: {
-						type: 'array',
+						type: "array",
 						items: {
-							type: 'string',
+							type: "string",
 						},
 					},
 					sensitivity: {
-						enum: ['base', 'accent', 'case', 'variant'],
+						enum: [ "base", "accent", "case", "variant", ],
 					},
 					ignorePunctuation: {
-						type: 'boolean',
+						type: "boolean",
 					},
 					numeric: {
-						type: 'boolean',
+						type: "boolean",
 					},
 					caseFirst: {
-						enum: ['upper', 'lower', 'false'],
+						enum: [ "upper", "lower", "false", ],
 					},
 					caseGroups: {
-						type: 'boolean',
+						type: "boolean",
 					},
 					specifier: {
-						enum: ['source', 'rename'],
+						enum: [ "source", "rename", ],
 					},
 					sortExports: {
-						type: 'boolean',
+						type: "boolean",
 					},
 					typesInGroup: {
-						enum: [...TypeImportGroupPosition.keys()],
+						enum: [ ...TypeImportGroupPosition.keys(), ],
 					},
 					inlineTypes: {
-						enum: [...TypeImportInlinePosition.keys()],
+						enum: [ ...TypeImportInlinePosition.keys(), ],
 					},
 				},
 			},
 		],
 	},
 	create(context) {
-		const configuration = { ...defaultConfiguration, ...context.options[0] };
+		const configuration = { ...defaultConfiguration, ...context.options[0], };
 
 		const source = context.sourceCode;
 
@@ -111,7 +111,7 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 		};
 
 		const sortModules = (group: ModuleDeclaration[]) => {
-			const sorted = sortByPath(group, ['source', 'value'], configuration);
+			const sorted = sortByPath(group, [ "source", "value", ], configuration);
 
 			if (configuration.typesInGroup !== TypeImportGroupPosition.Ignore.key) {
 				sorted.sort((a, b) => {
@@ -122,7 +122,6 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 						return 0;
 					}
 
-					// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 					switch (configuration.typesInGroup) {
 						case TypeImportGroupPosition.Top.key:
 							return aIsType ? -1 : 1;
@@ -131,7 +130,6 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 					}
 
 					if (a.source.value === b.source.value) {
-						// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 						switch (configuration.typesInGroup) {
 							case TypeImportGroupPosition.AboveValue.key:
 								return aIsType ? -1 : 1;
@@ -147,19 +145,19 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 			if (sorted.some((node, i) => node !== group[i])) {
 				fixRange(context, {
 					range: extrema(group),
-					message: 'Expected modules in group to be sorted',
-					code: sorted.map((node) => source.getText(node)).join('\n'),
+					message: "Expected modules in group to be sorted",
+					code: sorted.map((node) => source.getText(node)).join("\n"),
 				});
 			}
 		};
 
 		const specifiersText = (nodes: readonly (ImportSpecifier | ExportSpecifier)[]): string => {
 			if (nodes[0]?.loc?.start.line !== nodes[1]?.loc?.start.line) {
-				const indent = source.lines[nodes[0]!.loc!.start.line - 1]?.match(/^\s+/g)?.[0] ?? '';
-				return nodes.map((node, index) => `${index > 0 ? indent : ''}${source.getText(node)}`).join(',\n');
+				const indent = source.lines[nodes[0]!.loc!.start.line - 1]?.match(/^\s+/g)?.[0] ?? "";
+				return nodes.map((node, index) => `${index > 0 ? indent : ""}${source.getText(node)}`).join(",\n");
 			}
 
-			return nodes.map((node) => source.getText(node)).join(', ');
+			return nodes.map((node) => source.getText(node)).join(", ");
 		};
 
 		const sortSpecifiers = <T extends ImportSpecifier | ExportSpecifier>(specifiers: T[]) => {
@@ -168,13 +166,13 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 			}
 
 			const sorted: Array<ExportSpecifier | ImportSpecifier> = (() => {
-				if (specifiers[0]?.type === 'ImportSpecifier') {
-					const from: 'imported' | 'local' = configuration.specifier === 'source' ? 'imported' : 'local';
-					return sortByPath(specifiers as ImportSpecifier[], [from, 'name'], configuration);
+				if (specifiers[0]?.type === "ImportSpecifier") {
+					const from: "imported" | "local" = configuration.specifier === "source" ? "imported" : "local";
+					return sortByPath(specifiers as ImportSpecifier[], [ from, "name", ], configuration);
 				}
 
-				const from: 'exported' | 'local' = configuration.specifier === 'source' ? 'local' : 'exported';
-				return sortByPath(specifiers as ExportSpecifier[], [from, 'name'], configuration);
+				const from: "exported" | "local" = configuration.specifier === "source" ? "local" : "exported";
+				return sortByPath(specifiers as ExportSpecifier[], [ from, "name", ], configuration);
 			})();
 
 			if (configuration.inlineTypes !== TypeImportInlinePosition.Ignore.key) {
@@ -186,7 +184,6 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 						return 0;
 					}
 
-					// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 					switch (configuration.inlineTypes) {
 						case TypeImportInlinePosition.Start.key:
 							return aIsType ? -1 : 1;
@@ -201,24 +198,24 @@ export const rule: RuleModule<[Partial<Configuration>?]> = {
 			if (sorted.some((node, i) => node !== specifiers[i])) {
 				fixRange(context, {
 					range: extrema(specifiers),
-					message: 'Expected specifiers to be sorted',
+					message: "Expected specifiers to be sorted",
 					code: specifiersText(sorted),
 				});
 			}
 		};
 
 		importModules(source)
-			.reduce<ImportModuleDeclaration[][]>(partition, [[]])
+			.reduce<ImportModuleDeclaration[][]>(partition, [ [], ])
 			.forEach((group) => {
 				sortModules(group);
 				group.forEach((node) => {
-					sortSpecifiers(node.specifiers.filter(($): $ is ImportSpecifier => $.type === 'ImportSpecifier'));
+					sortSpecifiers(node.specifiers.filter(($): $ is ImportSpecifier => $.type === "ImportSpecifier"));
 				});
 			});
 
 		if (configuration.sortExports) {
 			exportModules(source)
-				.reduce<ExportModuleDeclaration[][]>(partition, [[]])
+				.reduce<ExportModuleDeclaration[][]>(partition, [ [], ])
 				.forEach((group) => {
 					sortModules(group);
 					group.forEach((node) => sortSpecifiers(node.specifiers ?? []));

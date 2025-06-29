@@ -1,13 +1,13 @@
-import assert from 'node:assert';
-import test from 'node:test';
+import assert from "node:assert";
+import test from "node:test";
 
-import tseslint from 'typescript-eslint';
-import dedent from 'dedent';
+import dedent from "dedent";
+import tseslint from "typescript-eslint";
 
-import { LintReporter, LintResult } from '../tools/test.js';
-import { rule, ModuleClass, TypeImport } from './group-imports.js';
+import { LintReporter, LintResult } from "../tools/test.js";
+import { rule, ModuleClass, TypeImport } from "./group-imports.js";
 
-test.describe('rule: group-imports', () => {
+test.describe("rule: group-imports", () => {
 	const reporter = new LintReporter(rule);
 
 	const tsParserConfig = {
@@ -16,13 +16,13 @@ test.describe('rule: group-imports', () => {
 		},
 	};
 
-	test.describe('valid code', () => {
-		test('no imports', () => {
+	test.describe("valid code", () => {
+		test("no imports", () => {
 			const report = reporter.lint(dedent``, []);
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('default groups', () => {
+		test("default groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -44,20 +44,20 @@ test.describe('rule: group-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('custom group order', () => {
+		test("custom group order", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
 
 					import 'fs';
 				`,
-				[{ class: ModuleClass.External.key }, { class: ModuleClass.Node.key }],
+				[ { class: ModuleClass.External.key, }, { class: ModuleClass.Node.key, }, ],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('explicit package precedence', () => {
+		test("explicit package precedence", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -66,26 +66,26 @@ test.describe('rule: group-imports', () => {
 
 					import 'path';
 				`,
-				['fs', { class: ModuleClass.External.key }, { class: ModuleClass.Node.key }],
+				[ "fs", { class: ModuleClass.External.key, }, { class: ModuleClass.Node.key, }, ],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('mixed groups', () => {
+		test("mixed groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
 					import 'foo';
 					import 'path';
 				`,
-				[[{ class: ModuleClass.Node.key }, { class: ModuleClass.External.key }]],
+				[ [ { class: ModuleClass.Node.key, }, { class: ModuleClass.External.key, }, ], ],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('comments in group', () => {
+		test("comments in group", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -100,7 +100,7 @@ test.describe('rule: group-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('type imports', () => {
+		test("type imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import type fs from 'fs';
@@ -116,7 +116,7 @@ test.describe('rule: group-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('separate type imports', () => {
+		test("separate type imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import type fs from 'fs';
@@ -137,11 +137,11 @@ test.describe('rule: group-imports', () => {
 						types: TypeImport.Exclude.key,
 					},
 					{
-						path: 'foo',
+						path: "foo",
 						types: TypeImport.Only.key,
 					},
 					{
-						path: 'foo',
+						path: "foo",
 						types: TypeImport.Exclude.key,
 					},
 				],
@@ -152,8 +152,8 @@ test.describe('rule: group-imports', () => {
 		});
 	});
 
-	test.describe('invalid code (fixable)', () => {
-		test('missing new line between groups', () => {
+	test.describe("invalid code (fixable)", () => {
+		test("missing new line between groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -174,7 +174,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('too many lines between groups', () => {
+		test("too many lines between groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -197,7 +197,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('invalid new line in group', () => {
+		test("invalid new line in group", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -218,7 +218,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('wrong group order', () => {
+		test("wrong group order", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
@@ -240,7 +240,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('ungrouped', () => {
+		test("ungrouped", () => {
 			const report = reporter.lint(
 				dedent`
 					import './bar';
@@ -264,7 +264,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('delimited group', () => {
+		test("delimited group", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
@@ -291,7 +291,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('separated groups', () => {
+		test("separated groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -319,7 +319,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('invalid new lines and missing new lines', () => {
+		test("invalid new lines and missing new lines", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -346,7 +346,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('scope group and implicit catch-all-group', () => {
+		test("scope group and implicit catch-all-group", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo/a';
@@ -358,7 +358,7 @@ test.describe('rule: group-imports', () => {
 					import 'baz';
 					import 'foo/d';
 				`,
-				[[{ class: ModuleClass.Node.key }, { class: ModuleClass.Absolute.key }], 'foo/*'],
+				[ [ { class: ModuleClass.Node.key, }, { class: ModuleClass.Absolute.key, }, ], "foo/*", ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -380,7 +380,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('comments in group', () => {
+		test("comments in group", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'fs';
@@ -428,7 +428,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('type imports', () => {
+		test("type imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import type fs from 'fs';
@@ -457,7 +457,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('separate type imports', () => {
+		test("separate type imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import type fs from 'fs';
@@ -476,11 +476,11 @@ test.describe('rule: group-imports', () => {
 						types: TypeImport.Exclude.key,
 					},
 					{
-						path: 'foo',
+						path: "foo",
 						types: TypeImport.Only.key,
 					},
 					{
-						path: 'foo',
+						path: "foo",
 						types: TypeImport.Exclude.key,
 					},
 				],
@@ -503,7 +503,7 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('node protocol imports', () => {
+		test("node protocol imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'node:fs';
@@ -524,14 +524,14 @@ test.describe('rule: group-imports', () => {
 			);
 		});
 
-		test('separate module subpaths', () => {
+		test("separate module subpaths", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'a/a/a';
 					import 'a/b/c';
 					import 'a/a/b';
 				`,
-				['a/a/*', 'a/b/*'],
+				[ "a/a/*", "a/b/*", ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -553,7 +553,7 @@ test.describe('rule: group-imports', () => {
 					import './a';
 					import './b.css';
 				`,
-				['*.css', { class: 'relative' }],
+				[ "*.css", { class: "relative", }, ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -568,8 +568,8 @@ test.describe('rule: group-imports', () => {
 		});
 	});
 
-	test.describe('invalid code (unfixable)', () => {
-		test('other code between imports', () => {
+	test.describe("invalid code (unfixable)", () => {
+		test("other code between imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';

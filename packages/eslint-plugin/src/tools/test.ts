@@ -1,8 +1,8 @@
-import { Enum } from '@shigen/enum';
-import { Ajv } from 'ajv';
-import { Linter } from 'eslint';
+import { Enum } from "@shigen/enum";
+import { Ajv } from "ajv";
+import { Linter } from "eslint";
 
-import type { RuleModule } from './rule.js';
+import type { RuleModule } from "./rule.js";
 
 const lintResultId = Symbol();
 
@@ -19,7 +19,7 @@ export interface LintReport {
 }
 
 export class AggregateError extends Error {
-	override readonly name = 'AggregateError';
+	override readonly name = "AggregateError";
 	override readonly message: string;
 	readonly errors: readonly Error[];
 
@@ -48,7 +48,7 @@ export class LintReporter<Configuration extends unknown[]> {
 		if (this.rule.meta?.schema instanceof Array) {
 			const schemas = this.rule.meta.schema;
 			options.forEach((option, index) => {
-				this.ajv.validate(schemas[index] ?? '', option);
+				this.ajv.validate(schemas[index] ?? "", option);
 			});
 		} else if (this.rule.meta?.schema) {
 			this.ajv.validate(this.rule.meta.schema, options);
@@ -62,7 +62,7 @@ export class LintReporter<Configuration extends unknown[]> {
 			...linterConfig,
 			languageOptions: {
 				ecmaVersion: 2018,
-				sourceType: 'module',
+				sourceType: "module",
 				...linterConfig?.languageOptions,
 			},
 			plugins: {
@@ -73,22 +73,22 @@ export class LintReporter<Configuration extends unknown[]> {
 				},
 			},
 			rules: {
-				'test/test': ['error', ...options],
+				"test/test": [ "error", ...options, ],
 			},
 		};
 
 		const errorReport = this.linter.verify(source, config, filename);
-		const fatalParsingErrors = errorReport.filter(({ fatal }) => fatal).map(({ message }) => new Error(message));
+		const fatalParsingErrors = errorReport.filter(({ fatal, }) => fatal).map(({ message, }) => new Error(message));
 
 		if (fatalParsingErrors.length) {
-			throw new AggregateError(fatalParsingErrors, 'parsing error before fix');
+			throw new AggregateError(fatalParsingErrors, "parsing error before fix");
 		}
 
 		const fixReport = this.linter.verifyAndFix(source, config, filename);
-		const fatalFixErrors = fixReport.messages.filter(({ fatal }) => fatal).map(({ message }) => new Error(message));
+		const fatalFixErrors = fixReport.messages.filter(({ fatal, }) => fatal).map(({ message, }) => new Error(message));
 
 		if (fatalFixErrors.length) {
-			throw new AggregateError(fatalFixErrors, 'parsing error after fix');
+			throw new AggregateError(fatalFixErrors, "parsing error after fix");
 		}
 
 		let result = LintResult.Valid;

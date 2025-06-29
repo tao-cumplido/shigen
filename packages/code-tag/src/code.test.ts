@@ -1,15 +1,15 @@
-import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import assert from "node:assert/strict";
+import { test } from "node:test";
 
-import dedent from 'dedent';
+import dedent from "dedent";
 
-import { code } from './code.js';
+import { code } from "./code.js";
 
-test('string', () => {
+test("string", () => {
 	assert.equal(
 		code.js`
 			a
-			${'b'}
+			${"b"}
 		`,
 		dedent`
 			a
@@ -18,11 +18,11 @@ test('string', () => {
 	);
 });
 
-test('literal', () => {
+test("literal", () => {
 	assert.equal(
 		code.js`
 			a
-			${code.literal('b')}
+			${code.literal("b")}
 		`,
 		dedent`
 			a

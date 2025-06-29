@@ -9,5 +9,5 @@ function polyfill(name: string) {
 	}
 }
 
-polyfill('dispose');
-polyfill('asyncDispose');
+polyfill("dispose");
+polyfill("asyncDispose");

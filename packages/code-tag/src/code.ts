@@ -1,5 +1,5 @@
-import type { JsonValue } from 'type-fest';
-import dedent from 'dedent';
+import type { JsonValue } from "type-fest";
+import dedent from "dedent";
 
 class CodeLiteral {
 	readonly value: string;

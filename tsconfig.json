@@ -1,6 +1,7 @@
 {
 	"files": [],
 	"references": [
+		{ "path": "packages/code-tag/tsconfig.test.json" },
 		{ "path": "packages/eslint-plugin/tsconfig.test.json" },
 		{ "path": "packages/merge/tsconfig.test.json" },
 		{ "path": "packages/enum/tsconfig.test.json" },

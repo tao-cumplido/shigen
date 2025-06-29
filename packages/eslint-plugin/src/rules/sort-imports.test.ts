@@ -1,13 +1,13 @@
-import assert from 'node:assert';
-import test from 'node:test';
+import assert from "node:assert";
+import test from "node:test";
 
-import tseslint from 'typescript-eslint';
-import dedent from 'dedent';
+import dedent from "dedent";
+import tseslint from "typescript-eslint";
 
-import { LintReporter, LintResult } from '../tools/test.js';
-import { rule, TypeImportGroupPosition, TypeImportInlinePosition } from './sort-imports.js';
+import { LintReporter, LintResult } from "../tools/test.js";
+import { rule, TypeImportGroupPosition, TypeImportInlinePosition } from "./sort-imports.js";
 
-test.describe('rule: sort-imports', () => {
+test.describe("rule: sort-imports", () => {
 	const reporter = new LintReporter(rule);
 
 	const tsParserConfig = {
@@ -16,13 +16,13 @@ test.describe('rule: sort-imports', () => {
 		},
 	};
 
-	test.describe('valid code', () => {
-		test('no imports/exports', () => {
+	test.describe("valid code", () => {
+		test("no imports/exports", () => {
 			const report = reporter.lint(dedent``, []);
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('sorted modules', () => {
+		test("sorted modules", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'bar';
@@ -37,19 +37,19 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('scoped first', () => {
+		test("scoped first", () => {
 			const report = reporter.lint(
 				dedent`
 					import '@angular/core';
 					import 'rxjs';
 				`,
-				[{ caseGroups: true }],
+				[ { caseGroups: true, }, ],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('separate groups', () => {
+		test("separate groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
@@ -62,7 +62,7 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('sorted specifiers', () => {
+		test("sorted specifiers", () => {
 			const report = reporter.lint(
 				dedent`
 					import { a, b } from 'foo';
@@ -73,7 +73,7 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('sort 2 before 10', () => {
+		test("sort 2 before 10", () => {
 			const report = reporter.lint(
 				dedent`
 					import { a2, a10 } from 'foo';
@@ -84,7 +84,7 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('renamed specifiers', () => {
+		test("renamed specifiers", () => {
 			const report = reporter.lint(
 				dedent`
 					import { a as b, b as a} from 'foo';
@@ -95,7 +95,7 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('ignore local exports', () => {
+		test("ignore local exports", () => {
 			const report = reporter.lint(
 				dedent`
 					export const foo = 1;
@@ -107,7 +107,7 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('ignore type imports', () => {
+		test("ignore type imports", () => {
 			const report = reporter.lint(
 				dedent`
 					import type foo from 'foo';
@@ -123,20 +123,20 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.result, LintResult.Valid);
 		});
 
-		test('empty path should not throw', () => {
+		test("empty path should not throw", () => {
 			const report = reporter.lint(
 				dedent`
 					export * from '';
 				`,
-				[{ caseGroups: true }],
+				[ { caseGroups: true, }, ],
 			);
 
 			assert.equal(report.result, LintResult.Valid);
 		});
 	});
 
-	test.describe('invalid code (fixable)', () => {
-		test('unsorted modules', () => {
+	test.describe("invalid code (fixable)", () => {
+		test("unsorted modules", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
@@ -162,7 +162,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('unsorted specifiers', () => {
+		test("unsorted specifiers", () => {
 			const report = reporter.lint(
 				dedent`
 					import { b, a } from 'foo';
@@ -184,7 +184,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('mixed case specifiers', () => {
+		test("mixed case specifiers", () => {
 			const report = reporter.lint(
 				dedent`
 					import { Ab, ba, Ba, ab } from 'foo';
@@ -202,12 +202,12 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('case groups', () => {
+		test("case groups", () => {
 			const report = reporter.lint(
 				dedent`
 					import { Ab, ba, Ba, ab } from 'foo';
 				`,
-				[{ caseGroups: true }],
+				[ { caseGroups: true, }, ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -220,12 +220,12 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('case groups, upper first', () => {
+		test("case groups, upper first", () => {
 			const report = reporter.lint(
 				dedent`
 					import { Ab, ba, Ba, ab } from 'foo';
 				`,
-				[{ caseGroups: true, caseFirst: 'upper' }],
+				[ { caseGroups: true, caseFirst: "upper", }, ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -238,12 +238,12 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('sort 2 after 10', () => {
+		test("sort 2 after 10", () => {
 			const report = reporter.lint(
 				dedent`
 					import { a2, a10 } from 'foo';
 				`,
-				[{ numeric: false }],
+				[ { numeric: false, }, ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -256,12 +256,12 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('unsorted local specifiers', () => {
+		test("unsorted local specifiers", () => {
 			const report = reporter.lint(
 				dedent`
 					import { a as b, b as a } from 'foo';
 				`,
-				[{ specifier: 'rename' }],
+				[ { specifier: "rename", }, ],
 			);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -274,7 +274,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('ignore types', () => {
+		test("ignore types", () => {
 			const report = reporter.lint(
 				dedent`
 					import type bar from 'bar';
@@ -299,7 +299,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('types on top', () => {
+		test("types on top", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
@@ -307,7 +307,7 @@ test.describe('rule: sort-imports', () => {
 					import 'bar';
 					import type bar from 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.Top.key }],
+				[ { typesInGroup: TypeImportGroupPosition.Top.key, }, ],
 				tsParserConfig,
 			);
 
@@ -324,7 +324,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('types on bottom', () => {
+		test("types on bottom", () => {
 			const report = reporter.lint(
 				dedent`
 					import type foo from 'foo';
@@ -332,7 +332,7 @@ test.describe('rule: sort-imports', () => {
 					import type bar from 'bar';
 					import 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.Bottom.key }],
+				[ { typesInGroup: TypeImportGroupPosition.Bottom.key, }, ],
 				tsParserConfig,
 			);
 
@@ -349,7 +349,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('types above value', () => {
+		test("types above value", () => {
 			const report = reporter.lint(
 				dedent`
 					import 'foo';
@@ -357,7 +357,7 @@ test.describe('rule: sort-imports', () => {
 					import type foo from 'foo';
 					import type bar from 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.AboveValue.key }],
+				[ { typesInGroup: TypeImportGroupPosition.AboveValue.key, }, ],
 				tsParserConfig,
 			);
 
@@ -374,7 +374,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('types below value', () => {
+		test("types below value", () => {
 			const report = reporter.lint(
 				dedent`
 					import type foo from 'foo';
@@ -382,7 +382,7 @@ test.describe('rule: sort-imports', () => {
 					import 'foo';
 					import 'bar';
 				`,
-				[{ typesInGroup: TypeImportGroupPosition.BelowValue.key }],
+				[ { typesInGroup: TypeImportGroupPosition.BelowValue.key, }, ],
 				tsParserConfig,
 			);
 
@@ -399,7 +399,7 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('inline types', () => {
+		test("inline types", () => {
 			const report = reporter.lint(dedent`import { type b, a } from 'foo';`, [], tsParserConfig);
 
 			assert.equal(report.result, LintResult.Fixed);
@@ -407,14 +407,14 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.code, dedent`import { a, type b } from 'foo';`);
 		});
 
-		test('inline types start', () => {
+		test("inline types start", () => {
 			const report = reporter.lint(
 				dedent`
 					import { a, type b } from 'foo';
 
 					export { a, type b } from 'bar';
 				`,
-				[{ inlineTypes: TypeImportInlinePosition.Start.key }],
+				[ { inlineTypes: TypeImportInlinePosition.Start.key, }, ],
 				tsParserConfig,
 			);
 
@@ -430,10 +430,10 @@ test.describe('rule: sort-imports', () => {
 			);
 		});
 
-		test('inline types end', () => {
+		test("inline types end", () => {
 			const report = reporter.lint(
 				dedent`import { type a, b } from 'foo';`,
-				[{ inlineTypes: TypeImportInlinePosition.End.key }],
+				[ { inlineTypes: TypeImportInlinePosition.End.key, }, ],
 				tsParserConfig,
 			);
 
@@ -442,7 +442,7 @@ test.describe('rule: sort-imports', () => {
 			assert.equal(report.code, dedent`import { b, type a } from 'foo';`);
 		});
 
-		test('preserve line breaks', () => {
+		test("preserve line breaks", () => {
 			const report = reporter.lint(
 				dedent`
 					import {

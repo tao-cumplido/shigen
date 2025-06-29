@@ -1,38 +1,38 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import fs from "node:fs/promises";
+import path from "node:path";
 
-import type { Simplify, UnionToIntersection } from 'type-fest';
+import type { Simplify, UnionToIntersection } from "type-fest";
 
 const supportedFields = {
 	unaryOperations: [
-		'access',
-		'open',
-		'truncate',
-		'rmdir',
-		'rm',
-		'mkdir',
-		'readdir',
-		'readlink',
-		'lstat',
-		'stat',
-		'statfs',
-		'unlink',
-		'chmod',
-		'lchmod',
-		'lchown',
-		'lutimes',
-		'chown',
-		'utimes',
-		'realpath',
-		'mkdtemp',
-		'writeFile',
-		'appendFile',
-		'readFile',
-		'opendir',
-		'watch',
+		"access",
+		"open",
+		"truncate",
+		"rmdir",
+		"rm",
+		"mkdir",
+		"readdir",
+		"readlink",
+		"lstat",
+		"stat",
+		"statfs",
+		"unlink",
+		"chmod",
+		"lchmod",
+		"lchown",
+		"lutimes",
+		"chown",
+		"utimes",
+		"realpath",
+		"mkdtemp",
+		"writeFile",
+		"appendFile",
+		"readFile",
+		"opendir",
+		"watch",
 	],
-	binaryOperations: ['copyFile', 'rename', 'symlink', 'link', 'cp'],
-	other: ['constants'],
+	binaryOperations: [ "copyFile", "rename", "symlink", "link", "cp", ],
+	other: [ "constants", ],
 } as const;
 
 type UnaryOperations = (typeof supportedFields.unaryOperations)[number];
@@ -53,7 +53,7 @@ type OverloadList<T extends Function> =
 		(...args: A2) => R2,
 		(...args: A3) => R3,
 		(...args: A4) => R4,
-		(...args: A5) => R5,
+		(...args: A5) => R5
 	] :
 	T extends {
 		(...args: infer A1): infer R1;
@@ -65,7 +65,7 @@ type OverloadList<T extends Function> =
 		(...args: A1) => R1,
 		(...args: A2) => R2,
 		(...args: A3) => R3,
-		(...args: A4) => R4,
+		(...args: A4) => R4
 	] :
 	T extends {
 		(...args: infer A1): infer R1;
@@ -75,7 +75,7 @@ type OverloadList<T extends Function> =
 	[
 		(...args: A1) => R1,
 		(...args: A2) => R2,
-		(...args: A3) => R3,
+		(...args: A3) => R3
 	] :
 	T extends {
 		(...args: infer A1): infer R1;
@@ -83,13 +83,13 @@ type OverloadList<T extends Function> =
 	} ?
 	[
 		(...args: A1) => R1,
-		(...args: A2) => R2,
+		(...args: A2) => R2
 	] :
 	T extends {
 		(...args: infer A1): infer R1;
 	} ?
 	[
-		(...args: A1) => R1,
+		(...args: A1) => R1
 	] :
 	[T];
 
@@ -108,9 +108,9 @@ type PatchCallSignature<T extends Function[], PathPosition extends `${number}`> 
 type ModifyFsCalls<T> = {
 	[P in keyof T]: T[P] extends Function
 		? P extends UnaryOperations
-			? PatchCallSignature<OverloadList<T[P]>, '0'>
+			? PatchCallSignature<OverloadList<T[P]>, "0">
 			: P extends BinaryOperations
-			? PatchCallSignature<OverloadList<T[P]>, '0' | '1'>
+			? PatchCallSignature<OverloadList<T[P]>, "0" | "1">
 			: T[P]
 		: T[P];
 };
@@ -133,14 +133,14 @@ type ProxyTarget = Simplify<
 
 export function createProxy(root: string): FsProxy {
 	function resolve(targetPath: unknown) {
-		if (typeof targetPath !== 'string') {
+		if (typeof targetPath !== "string") {
 			throw new Error(`only string paths are supported, got: '${targetPath?.constructor.name ?? typeof targetPath}'`);
 		}
 
 		const resolvedPath = path.join(root, targetPath);
 
 		if (!resolvedPath.startsWith(root)) {
-			throw new Error('paths leaving the directory are not allowed');
+			throw new Error("paths leaving the directory are not allowed");
 		}
 
 		return resolvedPath;

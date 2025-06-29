@@ -1,4 +1,4 @@
-export type SortOptions = Pick<Intl.CollatorOptions, 'sensitivity' | 'ignorePunctuation' | 'numeric' | 'caseFirst'> & {
+export type SortOptions = Pick<Intl.CollatorOptions, "sensitivity" | "ignorePunctuation" | "numeric" | "caseFirst"> & {
 	locales?: string[];
 	caseGroups?: boolean;
 };
@@ -17,7 +17,7 @@ interface CaseGroups<T> {
 }
 
 function isIndexable(value: unknown): value is Record<PathIndex, unknown> {
-	return typeof value === 'object' && value !== null;
+	return typeof value === "object" && value !== null;
 }
 
 function readPath(from: unknown, path: readonly PathIndex[]): unknown {
@@ -25,7 +25,7 @@ function readPath(from: unknown, path: readonly PathIndex[]): unknown {
 		return;
 	}
 
-	const [head, ...rest] = path;
+	const [ head, ...rest ] = path;
 
 	if (!head) {
 		throw new Error(`readPath: invalid input`);
@@ -40,11 +40,11 @@ function readPath(from: unknown, path: readonly PathIndex[]): unknown {
 
 function sort<T>(options?: SortOptions) {
 	return (a: Sortable<T>, b: Sortable<T>) => {
-		if (typeof a.sortValue === 'number' && typeof b.sortValue === 'number') {
+		if (typeof a.sortValue === "number" && typeof b.sortValue === "number") {
 			return a.sortValue - b.sortValue;
 		}
 
-		if (typeof a.sortValue === 'string' && typeof b.sortValue === 'string') {
+		if (typeof a.sortValue === "string" && typeof b.sortValue === "string") {
 			return a.sortValue.localeCompare(b.sortValue, options?.locales, options);
 		}
 
@@ -52,7 +52,6 @@ function sort<T>(options?: SortOptions) {
 	};
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function sortByPath<T extends object>(
 	sources: T[],
 	path: ReadonlyArray<string | number>,
@@ -69,7 +68,7 @@ export function sortByPath<T extends object>(
 
 			let target = groups.lower;
 
-			if (options?.caseGroups && typeof sortValue === 'string' && sortValue.length) {
+			if (options?.caseGroups && typeof sortValue === "string" && sortValue.length) {
 				if (/^[@$_]/u.test(sortValue)) {
 					target = groups.punctuation;
 				} else if (sortValue[0]?.toLocaleUpperCase(options.locales) === sortValue[0]) {
@@ -93,8 +92,8 @@ export function sortByPath<T extends object>(
 	caseGroups.lower.sort(sort(options));
 
 	return [
-		...caseGroups.punctuation.map(({ source }) => source),
-		...(options?.caseFirst === 'upper' ? caseGroups.upper : caseGroups.lower).map(({ source }) => source),
-		...(options?.caseFirst === 'upper' ? caseGroups.lower : caseGroups.upper).map(({ source }) => source),
+		...caseGroups.punctuation.map(({ source, }) => source),
+		...(options?.caseFirst === "upper" ? caseGroups.upper : caseGroups.lower).map(({ source, }) => source),
+		...(options?.caseFirst === "upper" ? caseGroups.lower : caseGroups.upper).map(({ source, }) => source),
 	];
 }

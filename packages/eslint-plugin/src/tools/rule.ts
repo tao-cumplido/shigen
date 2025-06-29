@@ -1,5 +1,5 @@
-import type { Rule } from 'eslint';
-import type { Node } from 'estree';
+import type { Rule } from "eslint";
+import type { Node } from "estree";
 
 export interface RuleContext<Configuration extends unknown[]> extends Rule.RuleContext {
 	options: Configuration;
@@ -17,7 +17,7 @@ export function fixRange(
 		code: string;
 	},
 ): void {
-	const [first, last] = data.range;
+	const [ first, last, ] = data.range;
 
 	context.report({
 		node: last,
@@ -27,7 +27,7 @@ export function fixRange(
 				return null;
 			}
 
-			return fixer.replaceTextRange([first.range[0], last.range[1]], data.code);
+			return fixer.replaceTextRange([ first.range[0], last.range[1], ], data.code);
 		},
 	});
 }
