@@ -6,11 +6,9 @@ import type { Comment, Node } from "estree";
 import { Enum } from "@shigen/enum";
 import { minimatch } from "minimatch";
 
-import type { ImportModuleDeclaration } from "../tools/ast.js";
-import type { RuleContext, RuleModule } from "../tools/rule.js";
-import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport } from "../tools/ast.js";
-import { fixRange } from "../tools/rule.js";
-import { sortByPath } from "../tools/sort.js";
+import { assertLoc, assertRange, extrema, importModules, isComment, isTypeImportOrExport, type ImportModuleDeclaration } from "../tools/ast.ts";
+import { fixRange, type RuleContext, type RuleModule } from "../tools/rule.ts";
+import { sortByPath } from "../tools/sort.ts";
 
 export type ModuleClassOption = "node" | "external" | "internal" | "absolute" | "relative";
 export type TypeImportOption = "include" | "exclude" | "only";

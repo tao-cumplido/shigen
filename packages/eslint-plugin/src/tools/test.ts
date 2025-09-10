@@ -2,7 +2,7 @@ import { Enum } from "@shigen/enum";
 import { Ajv } from "ajv";
 import { Linter } from "eslint";
 
-import type { RuleModule } from "./rule.js";
+import type { RuleModule } from "./rule.ts";
 
 const lintResultId = Symbol();
 
@@ -48,10 +48,10 @@ export class LintReporter<Configuration extends unknown[]> {
 		if (this.rule.meta?.schema instanceof Array) {
 			const schemas = this.rule.meta.schema;
 			options.forEach((option, index) => {
-				this.ajv.validate(schemas[index] ?? "", option);
+				this.ajv.validate(schemas[index] ?? "" as any, option);
 			});
 		} else if (this.rule.meta?.schema) {
-			this.ajv.validate(this.rule.meta.schema, options);
+			this.ajv.validate(this.rule.meta.schema as any, options);
 		}
 
 		if (this.ajv.errors?.length) {

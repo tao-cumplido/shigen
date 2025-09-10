@@ -1,8 +1,4 @@
-import fs from 'node:fs/promises';
+import fs from "node:fs/promises";
 
-import glob from 'fast-glob';
-
-for (const entry of await glob('dist/**/enum.d.ts')) {
-	const contents = await fs.readFile(entry, 'utf-8');
-	await fs.writeFile(entry, contents.replace('#private;', `#brand: Read<Config, 'Brand', string>;`));
-}
+const contents = await fs.readFile("dist/enum.d.ts", "utf-8");
+await fs.writeFile("dist/enum.d.ts", contents.replace("#private;", `#brand: Read<Config, 'Brand', string>;`));

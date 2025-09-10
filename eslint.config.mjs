@@ -20,7 +20,6 @@ export default typegen([
 		},
 		rules: {
 			"shigen/group-imports": [ "error",
-				"@shigen/polyfill-symbol-dispose",
 				{ class: "node", },
 				{ class: "external", },
 				{ class: "internal", },
@@ -78,7 +77,7 @@ export default typegen([
 			"ts/no-floating-promises": [ "error", { allowForKnownSafeCalls: [ {
 				from: "package",
 				package: "node:test",
-				name: [ "test", "describe", "todo", ],
+				name: [ "test", "suite", "todo", ],
 			}, ], }, ],
 			"ts/consistent-type-imports": [ "error", { fixStyle: "inline-type-imports", }, ],
 		},

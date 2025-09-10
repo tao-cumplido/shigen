@@ -6,7 +6,7 @@
 		"packages/*"
 	],
 	"engines": {
-		"node": ">=21.0.0"
+		"node": ">=24.0.0"
 	},
 	"scripts": {
 		"build": "pnpm run --recursive build",
@@ -14,19 +14,16 @@
 		"lint": "eslint '**/*.{js,ts}'"
 	},
 	"devDependencies": {
+		"@types/node": "24.3.1",
+		"wireit": "0.14.12",
 		"@arethetypeswrong/cli": "0.18.2",
+		"typescript": "5.9.2",
+		"expect-type": "1.2.2",
+		"eslint": "9.35.0",
 		"@shigen/eslint-plugin": "0.13.0",
-		"@stylistic/eslint-plugin": "5.1.0",
-		"@types/node": "24.0.7",
-		"eslint": "9.30.0",
-		"eslint-plugin-unused-imports": "4.1.4",
-		"eslint-typegen": "2.2.0",
-		"expect-type": "1.2.1",
-		"fast-glob": "3.3.3",
-		"ts-dualist": "0.2.0-beta.1",
-		"tsx": "4.20.3",
-		"typescript": "5.8.3",
-		"typescript-eslint": "8.35.0",
-		"wireit": "0.14.12"
+		"@stylistic/eslint-plugin": "5.3.1",
+		"eslint-plugin-unused-imports": "4.2.0",
+		"eslint-typegen": "2.3.0",
+		"typescript-eslint": "8.43.0"
 	}
 }

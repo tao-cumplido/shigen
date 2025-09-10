@@ -3,7 +3,7 @@ import test from "node:test";
 
 import type { PackageJson } from "type-fest";
 
-import { createFixture, jsonData, textData } from "./fixture.js";
+import { createFixture, jsonData, textData } from "./fixture.ts";
 
 test("copy template", async () => {
 	await using fixture = await createFixture("template");
@@ -86,8 +86,7 @@ test("exists", async () => {
 test("run", async () => {
 	await using fixture = await createFixture({
 		"package.json": jsonData<PackageJson>({
-			name: "test",
-			version: "0.0.0",
+			private: true,
 			dependencies: {
 				"@bitfront/test-package": "1.0.0",
 			},

@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import dedent from "dedent";
 
-import { code } from "./code.js";
+import { code } from "./code.ts";
 
 test("string", () => {
 	assert.equal(

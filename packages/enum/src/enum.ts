@@ -94,7 +94,7 @@ export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimi
 		}
 
 		#key: EnumKeyPrimitive;
-		#name?: string;
+		#name?: string | undefined;
 
 		get key() {
 			return this.#key;

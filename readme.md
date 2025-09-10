@@ -11,9 +11,6 @@ Class-based enums for JavaScript.
 ## [@shigen/merge](packages/merge)
 Customisable `merge` and `deepMerge` functions with advanced TypeScript support.
 
-## [@shigen/polyfill-symbol-dispose](packages/polyfill-symbol-dispose)
-Lightweight polyfill for the well-known symbols `Symbol.dispose` and `Symbol.asyncDispose` from the [Explicit Resource Management proposal](https://github.com/tc39/proposal-explicit-resource-management).
-
 ## [@shigen/test](packages/test)
 Set of tools for testing purposes.
 
@@ -21,5 +18,5 @@ Set of tools for testing purposes.
 
 Requirements
 
-- Node.js >= 21
+- Node.js ≥ 24
 - pnpm

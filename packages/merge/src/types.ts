@@ -52,8 +52,6 @@ export type DeepMerge<Target extends Composite, Source extends Composite> =
 	Source extends readonly unknown[] ? DeepMerge<Target, TupleToRecord<Source>> :
 	{ [P in keyof Target | keyof Source]: DeepVisit<Target, Source, P> };
 
-export type MergeFunction = (target: Composite, source: Composite) => object;
-
 export interface VisitorState {
 	readonly key: string;
 	readonly values: readonly [unknown, unknown];
@@ -64,3 +62,6 @@ export type VisitorFunction = (state: VisitorState) => unknown;
 export interface MergeOptions {
 	readonly visit: VisitorFunction;
 }
+
+export type MergeFunction = <Target extends Composite, Source extends Composite>(target: Target, source: Source) => Merge<Target, Source>;
+export type DeepMergeFunction = <Target extends Composite, Source extends Composite>(target: Target, source: Source) => DeepMerge<Target, Source>;

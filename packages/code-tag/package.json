@@ -7,6 +7,10 @@
 	"author": "Tao Cumplido",
 	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/code-tag",
 	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"type": "module",
+	"exports": {
+		".": "./dist/code.js"
+	},
 	"scripts": {
 		"build": "wireit",
 		"postbuild": "wireit",
@@ -14,13 +18,13 @@
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd"
+			"command": "tsc"
 		},
 		"postbuild": {
-			"command": "attw --pack ."
+			"command": "attw --profile esm-only --pack ."
 		},
 		"test": {
-			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
 			"files": [
 				"src/**/*.ts"
 			],
@@ -28,21 +32,7 @@
 		}
 	},
 	"dependencies": {
-		"dedent": "^1.5.1",
-		"type-fest": "^4.9.0"
-	},
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/module/code.d.ts",
-				"default": "./dist/module/code.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/code.d.ts",
-				"default": "./dist/commonjs/code.js"
-			}
-		}
-	},
-	"types": "./dist/commonjs/code.d.ts",
-	"main": "./dist/commonjs/code.js"
+		"dedent": "^1.7.0",
+		"type-fest": "^4.41.0"
+	}
 }

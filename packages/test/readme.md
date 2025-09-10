@@ -55,10 +55,10 @@ test('fs fixture', async () => {
 
 ### API
 
-#### `textData(contents: string, encoding?: BufferEncoding): Buffer`
-Semantic wrapper for `Buffer.from`. Useful for populating a `DataTree` input alongside the `jsonData` function.
+#### `textData(contents: string, encoding?: Encoder<number>): Uint8Array`
+Encode string into `Uint8Array`. Uses package [`@binary-tools/core`](https://www.npmjs.com/package/@binary-tools/core) for encoding. The `Encoder<number>` type describes a function that receives a Unicode code point and returns the corresponding byte representation as `Uint8Array`. Common encodings are re-exported from `@binary-tools/core/encoder`. Defaults to `CharUtf8`.
 
-#### `jsonData<T extends Jsonifiable>(data: T): Buffer`
+#### `jsonData<T extends Jsonifiable>(data: T): Uint8Array`
 Create UTF-8 encoded JSON data from input. The `Jsonifiable` type is imported from [`type-fest`](https://www.npmjs.com/package/type-fest#json) and matches all valid JSON data types or objects with a `toJSON` method. `type-fest` provides other useful types like `PackageJson` or `TsConfigJson` that can be used explicitly as type argument to provide auto-completion and validation for known properties.
 
 #### `createFixture(source: string | DataTree): Promise<Fixture>`
@@ -71,11 +71,11 @@ Create fixture at a randomly unique path inside the OS's default temporary direc
 The fixture can be initialized with the `await using` syntax from the [Explicit Resource Management proposal](https://github.com/tc39/proposal-explicit-resource-management). This syntax is currently supported by transpiling with Babel or TypeScript 5.2+. A polyfill is not needed since the supported Node.js versions already ship one.
 
 #### `DataTree`
-A recursive data structure that stores `Buffer`s to write to specified file paths.
+A recursive data structure that stores `Uint8Array`s to write to specified file paths.
 
 ```ts
 type DataTree = {
-	[key: string]: Buffer | DataTree;
+	[key: string]: Uint8Array | DataTree;
 }
 ```
 
@@ -101,7 +101,7 @@ class Fixture {
 	readonly fs: FsProxy;
 
 	/** Run shell commands inside the fixture's directory with execa's script interface */
-	readonly run: Execa$;
+	readonly run: ExecaScriptMethod;
 
 	/** Convenience wrapper around fs.access */
 	exists(path?: string): Promise<Boolean>;

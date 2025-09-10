@@ -4,8 +4,8 @@ import test from "node:test";
 import dedent from "dedent";
 import tseslint from "typescript-eslint";
 
-import { LintReporter, LintResult } from "../tools/test.js";
-import { rule, TypeImportGroupPosition, TypeImportInlinePosition } from "./sort-imports.js";
+import { LintReporter, LintResult } from "../tools/test.ts";
+import { rule, TypeImportGroupPosition, TypeImportInlinePosition } from "./sort-imports.ts";
 
 test.describe("rule: sort-imports", () => {
 	const reporter = new LintReporter(rule);

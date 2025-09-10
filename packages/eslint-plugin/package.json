@@ -19,8 +19,10 @@
 		"readme.md",
 		"dist/**/*"
 	],
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js"
+	},
 	"scripts": {
 		"prepublishOnly": "wireit",
 		"test": "wireit",
@@ -34,21 +36,21 @@
 			]
 		},
 		"test": {
-			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
 			"files": [
 				"src/**/*.ts"
 			],
 			"output": []
 		},
 		"build": {
-			"command": "tsc --build tsconfig.build.json",
+			"command": "tsc --build tsconfig.json",
 			"clean": "if-file-deleted",
 			"files": [
 				"src/**/*.ts",
 				"!src/**/*.test.ts",
 				"!src/tools/test.ts",
 				"../../tsconfig.base.json",
-				"tsconfig.build.json"
+				"tsconfig.json"
 			],
 			"output": [
 				"dist/**",
@@ -61,23 +63,23 @@
 	},
 	"dependencies": {
 		"@shigen/enum": "~0.5.0",
-		"minimatch": "^10.0.1"
+		"minimatch": "^10.0.3"
 	},
 	"devDependencies": {
 		"@types/eslint": "9.6.1",
-		"@types/estree": "1.0.6",
-		"@typescript-eslint/types": "8.26.1",
-		"typescript-eslint": "8.26.1",
+		"@types/estree": "1.0.8",
+		"@typescript-eslint/types": "8.42.0",
+		"typescript-eslint": "8.42.0",
 		"ajv": "8.17.1",
-		"eslint": "9.22.0",
-		"dedent": "1.5.3"
+		"eslint": "9.35.0",
+		"dedent": "1.7.0"
 	},
 	"peerDependencies": {
-		"@typescript-eslint/parser": "^8.0.0",
+		"typescript-eslint": "^8.0.0",
 		"eslint": "^9.0.0"
 	},
 	"peerDependenciesMeta": {
-		"@typescript-eslint/parser": {
+		"typescript-eslint": {
 			"optional": true
 		}
 	}

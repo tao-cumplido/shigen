@@ -12,6 +12,10 @@
 	"author": "Tao Cumplido",
 	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/enum",
 	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"type": "module",
+	"exports": {
+		".": "./dist/enum.js"
+	},
 	"scripts": {
 		"build": "wireit",
 		"postbuild": "wireit",
@@ -19,13 +23,13 @@
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd"
+			"command": "tsc"
 		},
 		"preserve-brand-type": {
 			"command": "node preserve-brand-type.mjs"
 		},
 		"postbuild": {
-			"command": "attw --pack .",
+			"command": "attw --profile esm-only --pack .",
 			"dependencies": [
 				"preserve-brand-type"
 			]
@@ -38,7 +42,7 @@
 			"output": []
 		},
 		"test": {
-			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
 			"dependencies": [
 				{
 					"script": "test:types",
@@ -53,19 +57,5 @@
 	},
 	"dependencies": {
 		"type-fest": "^4.41.0"
-	},
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/module/enum.d.ts",
-				"default": "./dist/module/enum.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/enum.d.ts",
-				"default": "./dist/commonjs/enum.js"
-			}
-		}
-	},
-	"types": "./dist/commonjs/enum.d.ts",
-	"main": "./dist/commonjs/enum.js"
+	}
 }

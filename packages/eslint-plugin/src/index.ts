@@ -1,7 +1,7 @@
 import type { ESLint } from "eslint";
 
-import { rule as groupImports } from "./rules/group-imports.js";
-import { rule as sortImports } from "./rules/sort-imports.js";
+import { rule as groupImports } from "./rules/group-imports.ts";
+import { rule as sortImports } from "./rules/sort-imports.ts";
 
 export const rules = {
 	"group-imports": groupImports,

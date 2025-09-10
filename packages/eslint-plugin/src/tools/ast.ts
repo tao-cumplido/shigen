@@ -50,7 +50,7 @@ export function isComment(value: AST.Token | estree.Comment | estree.Node): valu
 	return value.type === "Block" || value.type === "Line";
 }
 
-export function assertLoc(value: { loc?: AST.SourceLocation | null; } | undefined): AST.SourceLocation {
+export function assertLoc(value: { loc?: AST.SourceLocation | null | undefined; } | undefined): AST.SourceLocation {
 	if (value?.loc) {
 		return value.loc;
 	}
@@ -58,7 +58,7 @@ export function assertLoc(value: { loc?: AST.SourceLocation | null; } | undefine
 	throw new Error(`error: AST was generated without node location information`);
 }
 
-export function assertRange(value: { range?: AST.Range | null; } | undefined): AST.Range {
+export function assertRange(value: { range?: AST.Range | null | undefined; } | undefined): AST.Range {
 	if (value?.range) {
 		return value.range;
 	}

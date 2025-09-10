@@ -1,18 +1,20 @@
 import type { Node } from "estree";
 import { Enum } from "@shigen/enum";
 
-import type {
-	ExportModuleDeclaration,
-	ExportSpecifier,
-	ImportModuleDeclaration,
-	ImportSpecifier,
-	ModuleDeclaration,
-} from "../tools/ast.js";
-import type { RuleModule } from "../tools/rule.js";
-import type { SortOptions } from "../tools/sort.js";
-import { exportModules, extrema, importModules, isTypeImportOrExport, linesBetween } from "../tools/ast.js";
-import { fixRange } from "../tools/rule.js";
-import { sortByPath } from "../tools/sort.js";
+import {
+	exportModules,
+	extrema,
+	importModules,
+	isTypeImportOrExport,
+	linesBetween,
+	type ExportModuleDeclaration,
+	type ExportSpecifier,
+	type ImportModuleDeclaration,
+	type ImportSpecifier,
+	type ModuleDeclaration,
+} from "../tools/ast.ts";
+import { fixRange, type RuleModule } from "../tools/rule.ts";
+import { sortByPath, type SortOptions } from "../tools/sort.ts";
 
 export type GroupPositionOption = "ignore" | "top" | "bottom" | "above-value" | "below-value";
 export type InlinePositionOption = "ignore" | "start" | "end";

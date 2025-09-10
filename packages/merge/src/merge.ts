@@ -1,6 +1,6 @@
-import type { Composite, DeepMerge, Merge, MergeFunction, MergeOptions } from "./types.js";
+import type { Composite, DeepMergeFunction, MergeFunction, MergeOptions } from "./types.ts";
 
-export type * from "./types.js";
+export type * from "./types.ts";
 
 declare function structuredClone(value: any): unknown;
 
@@ -12,11 +12,11 @@ export function clone(target: unknown, source: unknown): unknown {
 	return typeof source === "symbol" ? source : structuredClone(source);
 }
 
-export function createMerge<T extends MergeFunction = MergeFunction>(
+export function createMerge(
 	options: MergeOptions = {
 		visit: ({ values: [ target, source, ], }) => clone(target, source),
 	},
-): T {
+): (target: any, source: any) => never {
 	// @ts-expect-error
 	return (target, source) => {
 		if (Array.isArray(target) && Array.isArray(source)) {
@@ -29,12 +29,13 @@ export function createMerge<T extends MergeFunction = MergeFunction>(
 		}
 
 		return Object.fromEntries(
+			// eslint-disable-next-line ts/no-unsafe-argument
 			[ ...new Set([ ...Object.keys(target), ...Object.keys(source), ]), ].map((key) => {
 				return [
 					key,
 					options.visit({
 						key,
-						// @ts-expect-error
+						// eslint-disable-next-line ts/no-unsafe-member-access
 						values: [ target[key], source[key], ],
 					}),
 				];
@@ -43,21 +44,13 @@ export function createMerge<T extends MergeFunction = MergeFunction>(
 	};
 }
 
-export const merge =
-	createMerge<
-		<Target extends Composite, Source extends Composite>(target: Target, source: Source) => Merge<Target, Source>
-	>();
+export const merge: MergeFunction = createMerge();
 
 export function isComposite(value: unknown): value is Composite {
 	return Array.isArray(value) || (typeof value === "object" && value !== null);
 }
 
-export const deepMerge: <Target extends Composite, Source extends Composite>(
-	target: Target,
-	source: Source,
-) => DeepMerge<Target, Source> = createMerge<
-	<Target extends Composite, Source extends Composite>(target: Target, source: Source) => DeepMerge<Target, Source>
->({
+export const deepMerge: DeepMergeFunction = createMerge({
 	visit: ({ values: [ target, source, ], }) => {
 		if (isComposite(target) && isComposite(source)) {
 			return deepMerge(target, source);

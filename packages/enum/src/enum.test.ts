@@ -4,8 +4,8 @@ import test from "node:test";
 import type { SetRequired } from "type-fest";
 import { expectTypeOf } from "expect-type";
 
-import type { EnumFields } from "./enum.js";
-import { Enum } from "./enum.js";
+import type { EnumFields } from "./enum.ts";
+import { Enum } from "./enum.ts";
 
 test("defaults", () => {
 	const id = Symbol();

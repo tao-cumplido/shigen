@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import test from "node:test";
 
-import { createProxy } from "./proxy.js";
-import { createTemporaryDirectory } from "./temporary-directory.js";
+import { createProxy } from "./proxy.ts";
+import { createTemporaryDirectory } from "./temporary-directory.ts";
 
 test("spot checks", async () => {
 	await using tempDir = await createTemporaryDirectory();

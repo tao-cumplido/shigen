@@ -14,6 +14,10 @@
 	"author": "Tao Cumplido",
 	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/merge",
 	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"type": "module",
+	"exports": {
+		".": "./dist/merge.js"
+	},
 	"scripts": {
 		"build": "wireit",
 		"postbuild": "wireit",
@@ -21,7 +25,7 @@
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd",
+			"command": "tsc",
 			"clean": "if-file-deleted",
 			"files": [
 				"src/**/*.ts",
@@ -34,7 +38,7 @@
 			]
 		},
 		"postbuild": {
-			"command": "attw --pack .",
+			"command": "attw --profile esm-only --pack .",
 			"files": [
 				"dist/**",
 				"package.json"
@@ -49,7 +53,7 @@
 			"output": []
 		},
 		"test": {
-			"command": "tsx --tsconfig tsconfig.test.json --test-reporter spec --test 'src/**/*.test.ts'",
+			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
 			"dependencies": [
 				{
 					"script": "test:types",
@@ -61,19 +65,5 @@
 			],
 			"output": []
 		}
-	},
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/module/merge.d.ts",
-				"default": "./dist/module/merge.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/merge.d.ts",
-				"default": "./dist/commonjs/merge.js"
-			}
-		}
-	},
-	"types": "./dist/commonjs/merge.d.ts",
-	"main": "./dist/commonjs/merge.js"
+	}
 }

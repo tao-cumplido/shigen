@@ -39,7 +39,6 @@ type UnaryOperations = (typeof supportedFields.unaryOperations)[number];
 type BinaryOperations = (typeof supportedFields.binaryOperations)[number];
 type OtherFields = (typeof supportedFields.other)[number];
 
-/* prettier-ignore */
 type OverloadList<T extends Function> =
 	T extends {
 		(...args: infer A1): infer R1;

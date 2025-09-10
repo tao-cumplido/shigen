@@ -1,5 +1,3 @@
-import "@shigen/polyfill-symbol-dispose";
-
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -26,7 +24,6 @@ export class TemporaryDirectory {
 }
 
 export async function createTemporaryDirectory(): Promise<TemporaryDirectory> {
-
 	osTmpDir ??= await fs.realpath(os.tmpdir());
 	const id = crypto.randomUUID();
 	const path = joinPaths(osTmpDir, id);

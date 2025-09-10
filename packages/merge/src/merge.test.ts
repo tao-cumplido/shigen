@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { expectTypeOf } from "expect-type";
 
-import { deepMerge, merge } from "./merge.js";
+import { deepMerge, merge } from "./merge.ts";
 
 test("merge arrays", () => {
 	const target = [ 1, 2, 3, ] as const;
