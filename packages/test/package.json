@@ -1,6 +1,6 @@
 {
 	"name": "@shigen/test",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"description": "Tools for testing",
 	"keywords": [
 		"test",
@@ -25,11 +25,18 @@
 		"./fs": "./dist/fs/fixture.js"
 	},
 	"scripts": {
+		"prepublishOnly": "wireit",
 		"build": "wireit",
 		"postbuild": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
+		"prepublishOnly": {
+			"dependencies": [
+				"test",
+				"build"
+			]
+		},
 		"build": {
 			"command": "tsc"
 		},
