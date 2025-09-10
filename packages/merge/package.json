@@ -1,6 +1,6 @@
 {
 	"name": "@shigen/merge",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Merge and deep merge utility for nested data structures",
 	"keywords": [
 		"merge",
