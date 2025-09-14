@@ -1,0 +1,44 @@
+{
+	"name": "@shigen/async-array",
+	"version": "0.1.0",
+	"description": "",
+	"keywords": [],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/shigen/tree/main/packages/async-array",
+	"bugs": "https://github.com/tao-cumplido/shigen/issues",
+	"type": "module",
+	"exports": {
+		".": "./dist/async-array.js"
+	},
+	"scripts": {
+		"prepublishOnly": "wireit",
+		"build": "wireit",
+		"postbuild": "wireit",
+		"test": "wireit"
+	},
+	"wireit": {
+		"prepublishOnly": {
+			"dependencies": [
+				"test",
+				"build"
+			]
+		},
+		"build": {
+			"command": "tsc"
+		},
+		"postbuild": {
+			"command": "attw --profile esm-only --pack ."
+		},
+		"test": {
+			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
+			"files": [
+				"src/**/*.ts"
+			],
+			"output": []
+		}
+	},
+	"dependencies": {
+		"type-fest": "^4.41.0"
+	}
+}
