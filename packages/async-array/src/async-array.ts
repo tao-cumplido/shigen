@@ -1,41 +1,48 @@
 import type { Promisable } from "type-fest";
 
-export type AsyncArraySource<T> = Promisable<Iterable<T> | AsyncIterable<T>>;
+export type AsyncArraySource<T> = Iterable<T> | AsyncIterable<T>;
 
 export class AsyncArray<T = undefined> implements AsyncIterable<T> {
-	readonly #source: AsyncArraySource<T>;
+	static async from<T>(source: Promisable<AsyncArraySource<T>>): Promise<AsyncArray<T>> {
+		return new AsyncArray(await source);
+	}
 
-	constructor(length: number, indexMap?: (index: number) => T);
-	constructor(source: AsyncArraySource<T>);
-	constructor(source: number | AsyncArraySource<T>, indexMap: (index: number) => any = () => {}) {
-		this.#source = typeof source === "number" ?
-			Array.from({ length: source, }, (_, index) => indexMap(index)) :
-			source;
+	static indexed(length: number): AsyncArray<number> {
+		return new AsyncArray(Array.from({ length, }).map((_, index) => index));
+	}
+
+	#source: AsyncArraySource<T>;
+	#operations: Array<(source: AsyncArraySource<any>) => Promisable<AsyncIterable<unknown>>> = [];
+
+	constructor(source?: AsyncArraySource<T>) {
+		this.#source = source ?? [];
+	}
+
+	#pipe<U>(operation: (source: AsyncArraySource<T>) => Promisable<AsyncIterable<U>>): AsyncArray<U> {
+		const result = new AsyncArray<any>(this.#source);
+		result.#operations = [ ...this.#operations, operation, ];
+		return result;
 	}
 
 	async toSync(): Promise<Array<T>> {
-		return Array.fromAsync(await this.#source);
+		return Array.fromAsync(this);
 	}
 
 	map<U>(callback: (value: T, index: number) => Promisable<U>): AsyncArray<U> {
-		const source = this;
-
-		return new AsyncArray(async function* () {
+		return this.#pipe(async function* (source) {
 			let index = 0;
 
 			for await (const item of source) {
 				yield await callback(item, index);
 				index += 1;
 			}
-		}());
+		});
 	}
 
 	filter<S extends T>(predicate: (value: T, index: number) => value is S): AsyncArray<S>;
 	filter(predicate: (value: T, index: number) => Promisable<unknown>): AsyncArray<T>;
 	filter(predicate: (value: T, index: number) => Promisable<unknown>): AsyncArray<T> {
-		const source = this;
-
-		return new AsyncArray(async function* () {
+		return this.#pipe(async function* (source) {
 			let index = 0;
 
 			for await (const item of source) {
@@ -45,15 +52,13 @@ export class AsyncArray<T = undefined> implements AsyncIterable<T> {
 
 				index += 1;
 			}
-		}());
+		});
 	}
 
 	take(limit: number): AsyncArray<T> {
-		const source = this;
-
 		limit = Math.floor(limit);
 
-		return new AsyncArray(async function* () {
+		return this.#pipe(async function* (source) {
 			let index = 0;
 
 			for await (const item of source) {
@@ -65,15 +70,13 @@ export class AsyncArray<T = undefined> implements AsyncIterable<T> {
 
 				index += 1;
 			}
-		}());
+		});
 	}
 
 	drop(limit: number): AsyncArray<T> {
-		const source = this;
-
 		limit = Math.floor(limit);
 
-		return new AsyncArray(async function* () {
+		return this.#pipe(async function* (source) {
 			let index = 0;
 
 			for await (const item of source) {
@@ -83,20 +86,18 @@ export class AsyncArray<T = undefined> implements AsyncIterable<T> {
 
 				index += 1;
 			}
-		}());
+		});
 	}
 
-	flatMap<U>(callback: (value: T, index: number) => AsyncArraySource<U>): AsyncArray<U> {
-		const source = this;
-
-		return new AsyncArray(async function* () {
+	flatMap<U>(callback: (value: T, index: number) => Promisable<AsyncArraySource<U>>): AsyncArray<U> {
+		return this.#pipe(async function* (source) {
 			let index = 0;
 
 			for await (const item of source) {
 				yield* await callback(item, index);
 				index += 1;
 			}
-		}());
+		});
 	}
 
 	reduce(callback: (previous: T, current: T, index: number) => Promisable<T>, initialValue?: T): Promise<T>;
@@ -170,7 +171,14 @@ export class AsyncArray<T = undefined> implements AsyncIterable<T> {
 	}
 
 	async *[Symbol.asyncIterator]() {
-		for await (const item of await this.#source) {
+		for (const operation of this.#operations) {
+			// @ts-expect-error
+			this.#source = await Array.fromAsync(await operation(this.#source));
+		}
+
+		this.#operations = [];
+
+		for await (const item of this.#source) {
 			yield item;
 		}
 	}

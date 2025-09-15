@@ -121,3 +121,28 @@ suite("find", () => {
 		assert.equal(result, void 0);
 	});
 });
+
+test("chain", async () => {
+	const source = [ 1, 2, 3, 4, 5, 6, ];
+
+	let n = 0;
+
+	const result = new AsyncArray(source)
+		.filter(async (value) => {
+			n++;
+			return value % 2;
+		})
+		// [1, 3, 5], n = 6
+		.map(async (value) => {
+			return value * n--;
+		})
+		// [6, 15, 20], n = 3
+		.filter(async (value) => {
+			return value % n;
+		});
+
+	// callbacks only run when array is consumed
+	assert.deepEqual(await result.toSync(), [ 20, ]);
+	// but shouldn't run twice
+	assert.deepEqual(await result.toSync(), [ 20, ]);
+});
