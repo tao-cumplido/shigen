@@ -19,11 +19,18 @@
 		".": "./dist/merge.js"
 	},
 	"scripts": {
+		"prepublishOnly": "wireit",
 		"build": "wireit",
 		"postbuild": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
+		"prepublishOnly": {
+			"dependencies": [
+				"test",
+				"build"
+			]
+		},
 		"build": {
 			"command": "tsc",
 			"clean": "if-file-deleted",
