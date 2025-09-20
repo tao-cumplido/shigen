@@ -122,7 +122,7 @@ suite("find", () => {
 	});
 });
 
-test("chain", async () => {
+test("chained operations", async () => {
 	const source = [ 1, 2, 3, 4, 5, 6, ];
 
 	let n = 0;
@@ -142,7 +142,10 @@ test("chain", async () => {
 		});
 
 	// callbacks only run when array is consumed
+	assert.equal(n, 0);
 	assert.deepEqual(await result.toSync(), [ 20, ]);
+	assert.equal(n, 3);
 	// but shouldn't run twice
 	assert.deepEqual(await result.toSync(), [ 20, ]);
+	assert.equal(n, 3);
 });

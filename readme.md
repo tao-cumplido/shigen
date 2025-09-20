@@ -2,6 +2,9 @@ Monorepo for packages in the `@shigen` scope. This scope is used to collect tool
 
 # Packages
 
+## [@shigen/async-array](packages/async-array)
+Wrapper around an `Iterable` or `AsyncIterable` providing the methods from the [Async Iterator Helpers proposal](https://github.com/tc39/proposal-async-iterator-helpers).
+
 ## [@shigen/enum](packages/enum)
 Class-based enums for JavaScript.
 

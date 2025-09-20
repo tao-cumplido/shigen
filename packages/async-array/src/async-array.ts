@@ -3,18 +3,24 @@ import type { Promisable } from "type-fest";
 export type AsyncArraySource<T> = Iterable<T> | AsyncIterable<T>;
 
 export class AsyncArray<T = undefined> implements AsyncIterable<T> {
-	static async from<T>(source: Promisable<AsyncArraySource<T>>): Promise<AsyncArray<T>> {
-		return new AsyncArray(await source);
+	static from(length: Promisable<number>): AsyncArray<number>;
+	static from<T>(source: Promisable<AsyncArraySource<T>>): AsyncArray<T>;
+	static from<T>(source: Promisable<number | AsyncArraySource<T>>): AsyncArray<number | T> {
+		return new AsyncArray(new Promise(async (resolve) => {
+			source = await source;
+
+			if (typeof source === "number") {
+				resolve(Array.from({ length: source, }).map((_, index) => index));
+			} else {
+				resolve(source);
+			}
+		}));
 	}
 
-	static indexed(length: number): AsyncArray<number> {
-		return new AsyncArray(Array.from({ length, }).map((_, index) => index));
-	}
-
-	#source: AsyncArraySource<T>;
+	#source: Promisable<AsyncArraySource<any>>;
 	#operations: Array<(source: AsyncArraySource<any>) => Promisable<AsyncIterable<unknown>>> = [];
 
-	constructor(source?: AsyncArraySource<T>) {
+	constructor(source?: Promisable<AsyncArraySource<T>>) {
 		this.#source = source ?? [];
 	}
 
@@ -24,7 +30,7 @@ export class AsyncArray<T = undefined> implements AsyncIterable<T> {
 		return result;
 	}
 
-	async toSync(): Promise<Array<T>> {
+	toSync(): Promise<Array<T>> {
 		return Array.fromAsync(this);
 	}
 
@@ -172,14 +178,13 @@ export class AsyncArray<T = undefined> implements AsyncIterable<T> {
 
 	async *[Symbol.asyncIterator]() {
 		for (const operation of this.#operations) {
-			// @ts-expect-error
-			this.#source = await Array.fromAsync(await operation(this.#source));
+			this.#source = await Array.fromAsync(await operation(await this.#source));
 		}
 
 		this.#operations = [];
 
-		for await (const item of this.#source) {
-			yield item;
+		for await (const item of await this.#source) {
+			yield item as T;
 		}
 	}
 }
