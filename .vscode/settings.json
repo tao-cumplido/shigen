@@ -4,8 +4,8 @@
 		"dist": true // set this to false to include "dist" folder in search results
 	},
 	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-	"typescript.tsc.autoDetect": "off",
-	"typescript.tsdk": "node_modules/typescript/lib",
+	"js/ts.tsc.autoDetect": "off",
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
 	"[javascript][typescript]": {
 		"editor.codeActionsOnSave": {
 			"source.fixAll.eslint": "explicit"
