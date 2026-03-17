@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 
 export default typegen([
 	{
-		ignores: [ "eslint-typegen.d.ts", "packages/*/dist/**/*", ],
+		ignores: [ "eslint-typegen.d.ts", "packages/*/{dist,.wireit}/**/*", ],
 	},
 	{
 		files: [ "**/*.?(c|m)@(j|t)s", ],
@@ -26,7 +26,7 @@ export default typegen([
 				{ class: "relative", },
 			],
 			"shigen/sort-imports": [ "error", { inlineTypes: "end", typesInGroup: "top", caseGroups: true, }, ],
-			"stylistic/quotes": [ "error", "double", { allowTemplateLiterals: true, }, ],
+			"stylistic/quotes": [ "error", "double", { allowTemplateLiterals: "always", }, ],
 			"stylistic/quote-props": [ "error", "consistent-as-needed", ],
 			"stylistic/semi": [ "error", "always", ],
 			"stylistic/semi-style": [ "error", "last", ],
@@ -47,7 +47,6 @@ export default typegen([
 	{
 		files: [ "**/*.?(c|m)ts", ],
 		languageOptions: {
-			// @ts-ignore
 			parser: tseslint.parser,
 			parserOptions: {
 				projectService: {
@@ -56,7 +55,6 @@ export default typegen([
 			},
 		},
 		plugins: {
-			// @ts-ignore
 			ts: tseslint.plugin,
 		},
 		rules: {
