@@ -4,7 +4,7 @@ import test from "node:test";
 import type { SetRequired } from "type-fest";
 import { expectTypeOf } from "expect-type";
 
-import type { EnumFields } from "./enum.ts";
+import type { EnumLike } from "./enum.ts";
 import { Enum } from "./enum.ts";
 
 test("defaults", () => {
@@ -36,10 +36,11 @@ test("TS branding", () => {
 
 	expectTypeOf(new A(id)).toEqualTypeOf(new B(id));
 
-	class C extends Enum<{ Brand: "C"; }>(id) {}
-	class D extends Enum<{ Brand: "D"; }>(id) {}
+	const otherId = Symbol();
 
-	expectTypeOf(new C(id)).not.toEqualTypeOf(new D(id));
+	class C extends Enum(otherId) {}
+
+	expectTypeOf(new A(id)).not.toEqualTypeOf(new C(otherId));
 });
 
 test("initial key", () => {
@@ -86,7 +87,7 @@ test("custom key generator", () => {
 test("non-number keys with config", () => {
 	const id = Symbol();
 
-	class E extends Enum<{ Key: string; }>(id, {
+	class E extends Enum(id, {
 		initialKey: "a",
 		nextKey: (key) => String.fromCharCode(key.charCodeAt(0) + 1),
 	}) {
@@ -94,7 +95,7 @@ test("non-number keys with config", () => {
 		static B = new E(id);
 	}
 
-	expectTypeOf(E).toExtend<new (check: symbol, fields?: EnumFields<{ Key: string; }>) => E>();
+	expectTypeOf(E).toExtend<new (check: typeof id, fields?: EnumLike<string>) => E>();
 
 	assert.equal(E.A.key, "a");
 	assert.equal(E.B.key, "b");
@@ -103,15 +104,29 @@ test("non-number keys with config", () => {
 test("non-number keys without config", () => {
 	const id = Symbol();
 
-	class E extends Enum<{ Key: string; }>(id) {
+	class E extends Enum<typeof id, string>(id) {
 		static A = new E(id, { key: "a", });
 		static B = new E(id, { key: "b", });
 	}
 
-	expectTypeOf(E).toExtend<new (check: symbol, fields: SetRequired<EnumFields<{ Key: string; }>, "key">) => E>();
+	expectTypeOf(E).toExtend<new (check: typeof id, fields: SetRequired<EnumLike<string>, "key">) => E>();
 
 	assert.equal(E.A.key, "a");
 	assert.equal(E.B.key, "b");
+});
+
+test("number keys with explicit type", () => {
+	const id = Symbol();
+
+	class E extends Enum<typeof id, number>(id) {
+		static A = new E(id);
+		static B = new E(id);
+	}
+
+	expectTypeOf(E).toExtend<new (check: typeof id, fields?: EnumLike<number>) => E>();
+
+	assert.equal(E.A.key, 0);
+	assert.equal(E.B.key, 1);
 });
 
 test("implicit names", () => {

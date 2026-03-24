@@ -1,67 +1,53 @@
 import type { Primitive, SetRequired, Simplify } from "type-fest";
 
-type Read<
-	Source extends Record<string, unknown>,
-	Key extends keyof Source,
-	Default extends Source[Key] = Source[Key]
-> = Key extends keyof Source ? Source[Key] : Default;
+export type EnumKey = NonNullable<Primitive>;
 
-export type EnumKeyPrimitive = NonNullable<Primitive>;
-
-export type EnumConfig<Key extends EnumKeyPrimitive = EnumKeyPrimitive> = {
-	Brand?: string;
-	Key?: Key;
-};
-
-declare class EnumInstance<Config extends Omit<EnumConfig, "Data">> {
-	readonly #brand: Read<Config, "Brand", string>;
-	readonly key: Read<Config, "Key", number>;
-	readonly name: string;
-}
-
-export type EnumLike<Config extends Omit<EnumConfig, "Data">> = EnumInstance<Config>;
-
-export type EnumFields<Config extends EnumConfig> = {
-	readonly key?: Read<Config, "Key", number>;
+export type EnumLike<Key extends EnumKey> = {
+	readonly key?: Key;
 	readonly name?: string;
 };
 
+export type EnumInstance<Id extends symbol, Key extends EnumKey> = { [K in Id]: never; } & SetRequired<EnumLike<Key>, keyof EnumLike<Key>>;
+
 export type EnumConstructor<
-	Config extends EnumConfig = {},
-	Arguments extends unknown[] = [fields?: EnumFields<Config>]
+	Id extends symbol,
+	Key extends EnumKey,
+	Arguments extends unknown[] = [fields?: EnumLike<Key>]
 > = {
-	new (check: symbol, ...args: Arguments): EnumLike<Config>;
-	lookupKey<Class extends { prototype: EnumLike<Config>; }>(
+	new (check: Id, ...args: Arguments): EnumInstance<Id, Key>;
+	lookupKey<Class extends { prototype: EnumInstance<Id, Key>; }>(
 		this: Class,
-		key: Read<Config, "Key", number>,
+		key: Key,
 	): Class["prototype"] | undefined;
-	keys(): IterableIterator<Read<Config, "Key", number>>;
-	values<Class extends { prototype: EnumLike<Config>; }>(this: Class): IterableIterator<Class["prototype"]>;
+	keys(): IterableIterator<Key>;
+	values<Class extends { prototype: EnumInstance<Id, Key>; }>(this: Class): IterableIterator<Class["prototype"]>;
 };
 
 type NextKey<T> = (key: T) => T;
 
-type KeyConfig<T> = {
-	initialKey?: T;
-	nextKey?: NextKey<T>;
+export type KeyConfig<T> = {
+	readonly initialKey?: T;
+	readonly nextKey?: NextKey<T>;
 };
 
 export type EnumFactory = {
-	(id: symbol, keyConfig?: KeyConfig<number>): EnumConstructor;
+	<Id extends symbol, Key extends EnumKey = number>(id: Id): EnumConstructor<
+		Id,
+		Key,
+		number extends Key ?
+			[fields?: EnumLike<number>] :
+			[fields: SetRequired<EnumLike<Key>, "key">]
+	>;
 
-	<Config extends EnumConfig<number>>(
-		id: symbol,
-		keyConfig?: KeyConfig<number>,
-	): EnumConstructor<Config, [fields?: EnumFields<Config>]>;
-
-	<Config extends SetRequired<EnumConfig<Exclude<EnumKeyPrimitive, number>>, "Key">>(
-		id: symbol,
-		keyConfig: SetRequired<KeyConfig<Read<Config, "Key">>, "initialKey" | "nextKey">,
-	): EnumConstructor<Config, [fields?: EnumFields<Config>]>;
-
-	<Config extends SetRequired<EnumConfig<Exclude<EnumKeyPrimitive, number>>, "Key">>(
-		id: symbol,
-	): EnumConstructor<Config, [fields: SetRequired<EnumFields<Config>, "key">]>;
+	<Id extends symbol, Key extends EnumKey = number>(
+		id: Id,
+		keyConfig?: Key extends number ?
+			KeyConfig<Key> :
+			SetRequired<KeyConfig<Key>, keyof KeyConfig<Key>>,
+	): EnumConstructor<
+		Id,
+		Key
+	>;
 };
 
 function validateKey(value: unknown) {
@@ -71,8 +57,8 @@ function validateKey(value: unknown) {
 }
 
 // @ts-expect-error
-export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimitive>) => {
-	const instances = new Map<EnumKeyPrimitive, Simplify<EnumLike<{ Key: EnumKeyPrimitive; }>>>();
+export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKey>) => {
+	const instances = new Map<EnumKey, Simplify<EnumInstance<symbol, EnumKey>>>();
 
 	const { nextKey = (key: number) => key + 1, } = keyConfig ?? {};
 	let { initialKey: currentKey = 0, } = keyConfig ?? {};
@@ -81,7 +67,7 @@ export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimi
 
 	// eslint-disable-next-line ts/no-shadow
 	return class Enum {
-		static lookupKey(key: EnumKeyPrimitive) {
+		static lookupKey(key: EnumKey) {
 			return instances.get(key);
 		}
 
@@ -93,7 +79,7 @@ export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimi
 			return instances.values();
 		}
 
-		#key: EnumKeyPrimitive;
+		#key: EnumKey;
 		#name?: string | undefined;
 
 		get key() {
@@ -109,7 +95,7 @@ export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimi
 			return this.#name;
 		}
 
-		constructor(check: symbol, fields?: EnumFields<{}>) {
+		constructor(check: symbol, fields?: EnumLike<EnumKey>) {
 			if (new.target === Enum) {
 				throw new Error(`Enum is an abstract class`);
 			}
@@ -124,13 +110,14 @@ export const Enum: EnumFactory = (id: symbol, keyConfig?: KeyConfig<EnumKeyPrimi
 			validateKey(this.#key);
 
 			if (instances.get(this.#key)) {
-				throw new Error(`enum item with key '${this.#key.toString()}' already defined`);
+				throw new Error(`Enum item with key '${this.#key.toString()}' already defined`);
 			}
 
 			currentKey = nextKey(this.#key as number);
 
 			validateKey(currentKey);
 
+			// @ts-expect-error
 			instances.set(this.#key, this);
 		}
 	};

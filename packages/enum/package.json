@@ -32,14 +32,8 @@
 		"build": {
 			"command": "tsc"
 		},
-		"preserve-brand-type": {
-			"command": "node preserve-brand-type.mjs"
-		},
 		"postbuild": {
-			"command": "attw --profile esm-only --pack .",
-			"dependencies": [
-				"preserve-brand-type"
-			]
+			"command": "attw --profile esm-only --pack ."
 		},
 		"test:types": {
 			"command": "tsc --project tsconfig.test.json",
@@ -63,6 +57,6 @@
 		}
 	},
 	"dependencies": {
-		"type-fest": "^4.41.0"
+		"type-fest": "^5.4.4"
 	}
 }

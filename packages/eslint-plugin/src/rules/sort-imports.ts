@@ -22,7 +22,7 @@ export type InlinePositionOption = "ignore" | "start" | "end";
 const typeImportGroupPositionId = Symbol();
 const typeImportInlinePositionId = Symbol();
 
-export class TypeImportGroupPosition extends Enum<{ Key: GroupPositionOption; }>(typeImportGroupPositionId) {
+export class TypeImportGroupPosition extends Enum<typeof typeImportGroupPositionId, GroupPositionOption>(typeImportGroupPositionId) {
 	static readonly Ignore = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "ignore", });
 	static readonly Top = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "top", });
 	static readonly Bottom = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "bottom", });
@@ -30,7 +30,7 @@ export class TypeImportGroupPosition extends Enum<{ Key: GroupPositionOption; }>
 	static readonly BelowValue = new TypeImportGroupPosition(typeImportGroupPositionId, { key: "below-value", });
 }
 
-export class TypeImportInlinePosition extends Enum<{ Key: InlinePositionOption; }>(typeImportInlinePositionId) {
+export class TypeImportInlinePosition extends Enum<typeof typeImportInlinePositionId, InlinePositionOption>(typeImportInlinePositionId) {
 	static readonly Ignore = new TypeImportInlinePosition(typeImportInlinePositionId, { key: "ignore", });
 	static readonly Start = new TypeImportInlinePosition(typeImportInlinePositionId, { key: "start", });
 	static readonly End = new TypeImportInlinePosition(typeImportInlinePositionId, { key: "end", });

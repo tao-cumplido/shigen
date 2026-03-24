@@ -16,7 +16,7 @@ export type TypeImportOption = "include" | "exclude" | "only";
 const moduleClassId = Symbol();
 const typeImportId = Symbol();
 
-export class ModuleClass extends Enum<{ Key: ModuleClassOption; }>(moduleClassId) {
+export class ModuleClass extends Enum<typeof moduleClassId, ModuleClassOption>(moduleClassId) {
 	static readonly Node = new ModuleClass(moduleClassId, { key: "node", });
 	static readonly External = new ModuleClass(moduleClassId, { key: "external", });
 	static readonly Internal = new ModuleClass(moduleClassId, { key: "internal", });
@@ -24,7 +24,7 @@ export class ModuleClass extends Enum<{ Key: ModuleClassOption; }>(moduleClassId
 	static readonly Relative = new ModuleClass(moduleClassId, { key: "relative", });
 }
 
-export class TypeImport extends Enum<{ Key: TypeImportOption; }>(typeImportId) {
+export class TypeImport extends Enum<typeof typeImportId, TypeImportOption>(typeImportId) {
 	static readonly Include = new TypeImport(typeImportId, { key: "include", });
 	static readonly Exclude = new TypeImport(typeImportId, { key: "exclude", });
 	static readonly Only = new TypeImport(typeImportId, { key: "only", });
