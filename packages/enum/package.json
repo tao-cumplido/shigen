@@ -17,44 +17,9 @@
 		".": "./dist/enum.js"
 	},
 	"scripts": {
-		"prepublishOnly": "wireit",
-		"build": "wireit",
-		"postbuild": "wireit",
-		"test": "wireit"
-	},
-	"wireit": {
-		"prepublishOnly": {
-			"dependencies": [
-				"test",
-				"build"
-			]
-		},
-		"build": {
-			"command": "tsc"
-		},
-		"postbuild": {
-			"command": "attw --profile esm-only --pack ."
-		},
-		"test:types": {
-			"command": "tsc --project tsconfig.test.json",
-			"files": [
-				"src/**/*.ts"
-			],
-			"output": []
-		},
-		"test": {
-			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
-			"dependencies": [
-				{
-					"script": "test:types",
-					"cascade": false
-				}
-			],
-			"files": [
-				"src/**/*.ts"
-			],
-			"output": []
-		}
+		"prepublishOnly": "task prepublish",
+		"build": "task build",
+		"test": "task test"
 	},
 	"dependencies": {
 		"type-fest": "^5.4.4"

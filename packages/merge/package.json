@@ -19,58 +19,8 @@
 		".": "./dist/merge.js"
 	},
 	"scripts": {
-		"prepublishOnly": "wireit",
-		"build": "wireit",
-		"postbuild": "wireit",
-		"test": "wireit"
-	},
-	"wireit": {
-		"prepublishOnly": {
-			"dependencies": [
-				"test",
-				"build"
-			]
-		},
-		"build": {
-			"command": "tsc",
-			"clean": "if-file-deleted",
-			"files": [
-				"src/**/*.ts",
-				"!src/**/*.test.ts",
-				"../../tsconfig.base.json",
-				"tsconfig.json"
-			],
-			"output": [
-				"dist/**"
-			]
-		},
-		"postbuild": {
-			"command": "attw --profile esm-only --pack .",
-			"files": [
-				"dist/**",
-				"package.json"
-			],
-			"output": []
-		},
-		"test:types": {
-			"command": "tsc --project tsconfig.test.json",
-			"files": [
-				"src/**/*.ts"
-			],
-			"output": []
-		},
-		"test": {
-			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
-			"dependencies": [
-				{
-					"script": "test:types",
-					"cascade": false
-				}
-			],
-			"files": [
-				"src/**/*.ts"
-			],
-			"output": []
-		}
+		"prepublishOnly": "task prepublish",
+		"build": "task build",
+		"test": "task test"
 	}
 }

@@ -10,5 +10,10 @@
 		"editor.codeActionsOnSave": {
 			"source.fixAll.eslint": "explicit"
 		}
+	},
+	"yaml.schemas": {
+		"https://taskfile.dev/schema.json": [
+			"**/taskfile.yml"
+		]
 	}
 }

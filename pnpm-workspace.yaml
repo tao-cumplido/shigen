@@ -1,4 +1,4 @@
 packages:
   - packages/*
-ignoredBuiltDependencies:
-  - esbuild
+onlyBuiltDependencies:
+  - '@go-task/cli'

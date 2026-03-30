@@ -24,39 +24,9 @@
 		".": "./dist/index.js"
 	},
 	"scripts": {
-		"prepublishOnly": "wireit",
-		"test": "wireit",
-		"build": "wireit"
-	},
-	"wireit": {
-		"prepublishOnly": {
-			"dependencies": [
-				"test",
-				"build"
-			]
-		},
-		"test": {
-			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
-			"files": [
-				"src/**/*.ts"
-			],
-			"output": []
-		},
-		"build": {
-			"command": "tsc --build tsconfig.json",
-			"clean": "if-file-deleted",
-			"files": [
-				"src/**/*.ts",
-				"!src/**/*.test.ts",
-				"!src/tools/test.ts",
-				"../../tsconfig.base.json",
-				"tsconfig.json"
-			],
-			"output": [
-				"dist/**",
-				"*.tsbuildinfo"
-			]
-		}
+		"prepublishOnly": "task prepublish",
+		"test": "task test",
+		"build": "task build"
 	},
 	"engines": {
 		"node": "^20.19.0 || ^22.13.0 || >=24"

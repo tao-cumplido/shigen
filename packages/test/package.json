@@ -25,31 +25,9 @@
 		"./fs": "./dist/fs/fixture.js"
 	},
 	"scripts": {
-		"prepublishOnly": "wireit",
-		"build": "wireit",
-		"postbuild": "wireit",
-		"test": "wireit"
-	},
-	"wireit": {
-		"prepublishOnly": {
-			"dependencies": [
-				"test",
-				"build"
-			]
-		},
-		"build": {
-			"command": "tsc"
-		},
-		"postbuild": {
-			"command": "attw --profile esm-only --pack ."
-		},
-		"test": {
-			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
-			"files": [
-				"src/**/*.ts"
-			],
-			"output": []
-		}
+		"prepublishOnly": "task prepublish",
+		"build": "task build",
+		"test": "task test"
 	},
 	"engines": {
 		"node": ">=18.0.0"

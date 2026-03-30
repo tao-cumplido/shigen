@@ -1,0 +1,32 @@
+version: '3'
+
+tasks:
+  build:
+    label: 'build: {{.USER_WORKING_DIR}}'
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - tsc
+      - attw --profile esm-only --pack .
+    sources:
+      - src/**/*.ts
+      - exclude: src/**/*.test.ts
+      - ../../tsconfig.base.json
+      - ../../tsconfig.build.json
+      - tsconfig.json
+    generates:
+      - dist/**
+      - tsconfig.tsbuildinfo
+
+  test:
+    label: 'test: {{.USER_WORKING_DIR}}'
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - tsc --project tsconfig.test.json
+      - node --test-reporter spec --test 'src/**/*.test.ts'
+    sources:
+      - src/**/*.ts
+
+  prepublish:
+    label: 'prepublish: {{.USER_WORKING_DIR}}'
+    dir: '{{.USER_WORKING_DIR}}'
+    deps: [build, test]
