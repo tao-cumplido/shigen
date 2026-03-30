@@ -1,6 +1,10 @@
 // @ts-check
 /// <reference path="./eslint-typegen.d.ts" />
 
+import fs from "node:fs/promises";
+import path from "node:path";
+import { setTimeout } from "node:timers/promises";
+
 import pluginShigen from "@shigen/eslint-plugin";
 import pluginStylistic from "@stylistic/eslint-plugin";
 import pluginUnusedImports from "eslint-plugin-unused-imports";
@@ -80,4 +84,24 @@ export default typegen([
 			"ts/consistent-type-imports": [ "error", { fixStyle: "inline-type-imports", }, ],
 		},
 	},
-]);
+]).then((config) => {
+	// https://github.com/antfu/eslint-typegen/issues/19#issuecomment-3615415254
+	new Promise(async () => {
+		// typegen writes the file without await
+		await setTimeout(1000);
+
+		const eslintPath = import.meta.resolve("eslint");
+		const modulePath = path.join(path.relative(".", new URL(eslintPath).pathname), "../../../@eslint/core/dist/cjs/types.d.cts");
+
+		const eslintTypegenSource = await fs.readFile("eslint-typegen.d.ts", "utf-8");
+
+		const eslintTypegenModified = eslintTypegenSource
+			.replace("import type { Linter } from 'eslint'", `import type { RuleConfig } from './${modulePath}'`)
+			.replace(/^declare module 'eslint' \{$.*?^\}$/msu, `declare module './${modulePath}' {\n  interface RulesConfig extends RuleOptions {}\n}`)
+			.replaceAll("Linter.RuleEntry", "RuleConfig");
+
+		await fs.writeFile("eslint-typegen.d.ts", eslintTypegenModified);
+	});
+
+	return config;
+});
